@@ -1,8 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blooms By Beth - Coming Soon Page
+
+This is a simple "under construction" page for Blooms By Beth, a floral business. The page features a sign-up form to collect email addresses from visitors who want to be notified when the site is fully launched.
+
+## Features
+
+- Responsive, mobile-friendly design
+- Email collection form with validation
+- Success message after submission
+- Beautiful flower-themed aesthetics
+- Email storage in Neon PostgreSQL database
+
+## Technologies Used
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Neon PostgreSQL
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+### Database Configuration
+
+1. Create a `.env.local` file in the root directory with your Neon database credentials:
+
+```
+NEON_DATABASE_URL=postgresql://your-username:your-password@your-neon-host/your-database-name
+```
+
+2. Replace the placeholder connection string with your actual Neon database credentials.
+
+3. The API will automatically create a `subscribers` table if it doesn't exist.
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -10,15 +50,59 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This site is designed to be hosted at [bloomsbybethchs.com](https://bloomsbybethchs.com).
+
+To build the application for production:
+
+```bash
+npm run build
+# or
+yarn build
+# or
+pnpm build
+```
+
+Then start the production server:
+
+```bash
+npm run start
+# or
+yarn start
+# or
+pnpm start
+```
+
+## Implementation Notes
+
+The email collection form is now connected to a Neon PostgreSQL database. Here's how it works:
+
+1. When a user submits their email, it's sent to an API endpoint (`/api/subscribe`)
+2. The API validates the email and connects to your Neon database
+3. If the table doesn't exist, it creates a `subscribers` table
+4. The email is stored in the database with a timestamp
+5. Duplicate emails are not stored again (handled by the `ON CONFLICT` clause)
+
+For security and proper error handling:
+
+- All database credentials are stored in environment variables
+- The API includes proper error handling for failed submissions
+- The form shows appropriate loading and error states
+- SSL is enabled for secure database connections
+
+### Accessing Stored Emails
+
+To access the stored emails:
+
+1. Log in to your Neon console at https://console.neon.tech/
+2. Navigate to your project and database
+3. Use the SQL Editor to run: `SELECT * FROM subscribers;`
+4. You can export the results as needed
 
 ## Learn More
 
