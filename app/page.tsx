@@ -70,7 +70,7 @@ export default function Home() {
         
         <h2 className="text-2xl font-semibold mb-4">Our website is blossoming...</h2>
         <p className="text-gray-600 mb-8">
-          We're working on creating a beautiful online experience. 
+          We&apos;re working on creating a beautiful online experience. 
           Sign up to be notified when we launch!
         </p>
         
@@ -98,7 +98,7 @@ export default function Home() {
           </form>
         ) : (
           <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-md">
-            Thank you! We'll let you know when we launch.
+            Thank you! We&apos;ll let you know when we launch.
           </div>
         )}
         
