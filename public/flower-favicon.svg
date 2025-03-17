@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+  <circle cx="50" cy="50" r="15" fill="#738c65" />
+  <g fill="#738c65">
+    <!-- Petals -->
+    <ellipse cx="50" cy="20" rx="15" ry="20" />
+    <ellipse cx="80" cy="50" rx="20" ry="15" />
+    <ellipse cx="50" cy="80" rx="15" ry="20" />
+    <ellipse cx="20" cy="50" rx="20" ry="15" />
+    <!-- Diagonal petals -->
+    <ellipse cx="73" cy="27" rx="15" ry="20" transform="rotate(45 73 27)" />
+    <ellipse cx="73" cy="73" rx="15" ry="20" transform="rotate(135 73 73)" />
+    <ellipse cx="27" cy="73" rx="15" ry="20" transform="rotate(225 27 73)" />
+    <ellipse cx="27" cy="27" rx="15" ry="20" transform="rotate(315 27 27)" />
+  </g>
+</svg> 
