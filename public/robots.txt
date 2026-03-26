@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://bloomsbybeth.com/sitemap.xml
+Sitemap: https://bloomsbybethchs.com/sitemap.xml

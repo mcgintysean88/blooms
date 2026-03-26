@@ -20,39 +20,36 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-2xl font-serif text-[#3c4c30] mb-6">Send Us a Message</h2>
-              <ContactForm />
-            </div>
+          <div className="max-w-2xl mx-auto mb-16">
+            <ContactForm />
+          </div>
 
-            <div>
-              <h2 className="text-2xl font-serif text-[#3c4c30] mb-6">Contact Information</h2>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#f0f4eb] p-3 rounded-full">
-                    <Mail className="h-5 w-5 text-[#738c65]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-[#3c4c30]">Email</h3>
-                    <p className="text-[#5a5a5a]">plant@bloomsbybethchs.com</p>
-                    <p className="text-sm text-[#5a5a5a] mt-1">
-                      We spend our days planting and tending to gardens. We will do our best to respond to all inquiries as promptly as possible.
-                    </p>
-                  </div>
+          <div className="border-t border-[#e5e7eb] pt-12">
+            <h2 className="text-2xl font-serif text-[#3c4c30] mb-8 text-center">Contact Information</h2>
+            <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+              <div className="flex items-start gap-4">
+                <div className="bg-[#f0f4eb] p-3 rounded-full">
+                  <Mail className="h-5 w-5 text-[#738c65]" />
                 </div>
+                <div>
+                  <h3 className="text-lg font-medium text-[#3c4c30]">Email</h3>
+                  <p className="text-[#5a5a5a]">plant@bloomsbybethchs.com</p>
+                  <p className="text-sm text-[#5a5a5a] mt-1">
+                    We spend our days planting and tending to gardens. We will do our best to respond to all inquiries as promptly as possible.
+                  </p>
+                </div>
+              </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="bg-[#f0f4eb] p-3 rounded-full">
-                    <MapPin className="h-5 w-5 text-[#738c65]" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-[#3c4c30]">Location</h3>
-                    <p className="text-[#5a5a5a]">Mount Pleasant, South Carolina</p>
-                    <p className="text-sm text-[#5a5a5a] mt-1">
-                      Serving greater Charleston and the surrounding Lowcountry area.
-                    </p>
-                  </div>
+              <div className="flex items-start gap-4">
+                <div className="bg-[#f0f4eb] p-3 rounded-full">
+                  <MapPin className="h-5 w-5 text-[#738c65]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-[#3c4c30]">Location</h3>
+                  <p className="text-[#5a5a5a]">Mount Pleasant, South Carolina</p>
+                  <p className="text-sm text-[#5a5a5a] mt-1">
+                    Serving greater Charleston and the surrounding Lowcountry area.
+                  </p>
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://bloomsbybeth.com' // Replace with your actual domain
+  const baseUrl = 'https://bloomsbybethchs.com'
 
   // Define your routes
   const routes = [

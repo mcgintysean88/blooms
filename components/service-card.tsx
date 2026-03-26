@@ -30,10 +30,10 @@ export function ServiceCard({ title, description, icon }: ServiceCardProps) {
   return (
     <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
       <CardContent className="p-6">
-        <div className="mb-4">
+        <div className="mb-4 flex justify-center">
           <IconComponent />
         </div>
-        <h3 className="text-xl font-serif text-[#3c4c30] mb-2">{title}</h3>
+        <h3 className="text-xl font-serif text-[#3c4c30] mb-2 text-center">{title}</h3>
         <p className="text-[#5a5a5a]">{description}</p>
       </CardContent>
     </Card>

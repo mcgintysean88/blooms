@@ -15,7 +15,7 @@ export function Footer() {
               <span className="font-serif text-xl">Blooms by Beth</span>
             </div>
             <p className="text-white/80 mb-6">
-              Bringing Southern charm and timeless elegance to gardens across the Southeast since 1996.
+              Bringing Southern charm and timeless elegance to gardens across the Southeast since 1998.
             </p>
             <SocialLinks className="text-white/80" />
           </div>
@@ -46,11 +46,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/portfolio" className="hover:text-white">
-                  Portfolio
-                </Link>
-              </li>
-              <li>
                 <Link href="/contact" className="hover:text-white">
                   Contact
                 </Link>
@@ -64,7 +59,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-white/70 text-sm">
           <p>© {new Date().getFullYear()} Blooms by Beth. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white">
+            <Link href="/privacy-policy" className="hover:text-white">
               Privacy Policy
             </Link>
             <Link href="/terms" className="hover:text-white">
