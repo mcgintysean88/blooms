@@ -1,11 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { TestimonialCard } from "@/components/testimonial-card"
 import { ServiceCard } from "@/components/service-card"
 import { NewsletterSignup } from "@/components/newsletter-signup"
 

@@ -8,12 +8,6 @@ import { revalidatePath } from "next/cache"
 const DATABASE_URL = process.env.DATABASE_URL || '';
 console.log("Database URL exists:", !!DATABASE_URL);
 
-// Fix type errors in the error handling
-type DatabaseError = Error & {
-  code?: string;
-  detail?: string;
-};
-
 const contactSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
