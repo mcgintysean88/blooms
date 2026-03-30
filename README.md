@@ -1,63 +1,137 @@
 # Blooms by Beth
 
-A modern, responsive website for Blooms by Beth, a professional garden design and landscaping service. Built with Next.js 14, TypeScript, and Tailwind CSS.
+A professional website for Blooms by Beth, a garden design and planting service based in Mount Pleasant, SC, serving the greater Charleston Lowcountry. Built with Next.js 15, TypeScript, and Tailwind CSS and deployed on Vercel.
 
-## Features
+**Live site:** [bloomsbybethchs.com](https://bloomsbybethchs.com)
 
-- Responsive design optimized for all devices
-- Modern UI with smooth animations
-- Contact form with email integration
-- Portfolio showcase
-- SEO optimized
-- Fast loading with Next.js Image optimization
+---
+
+## Pages
+
+| Route | Description |
+|---|---|
+| `/` | Home — hero image, intro, services overview, newsletter signup |
+| `/about` | About Beth — biography, philosophies, community involvement |
+| `/services` | Services — detailed service descriptions, what we don't do, 3-step process |
+| `/portfolio` | Portfolio — project gallery with photos and descriptions |
+| `/contact` | Contact — detailed inquiry form |
+| `/privacy-policy` | Privacy policy |
+| `/terms` | Terms of service |
+
+---
 
 ## Tech Stack
 
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- Shadcn UI Components
-- React Hook Form
-- Zod Validation
+| Layer | Technology |
+|---|---|
+| Framework | [Next.js 15](https://nextjs.org) (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| UI Components | [shadcn/ui](https://ui.shadcn.com) (Radix UI primitives) |
+| Validation | Zod |
+| Icons | Lucide React |
 
-## Getting Started
+---
 
-1. Clone the repository:
+## Services
+
+### Vercel — Hosting & Deployment
+- **URL:** [vercel.com](https://vercel.com)
+- **Purpose:** Hosts the production website. Automatically redeploys whenever code is pushed to the `main` branch on GitHub.
+- **Plan:** Free (Hobby)
+- **Repo connection:** `github.com/mcgintysean88/blooms` → `main` branch
+
+### GitHub — Source Control
+- **URL:** [github.com/mcgintysean88/blooms](https://github.com/mcgintysean88/blooms)
+- **Purpose:** Stores the codebase. Pushing to `main` triggers a Vercel deployment automatically.
+- **Active branch:** `main`
+
+### Neon — Database (PostgreSQL)
+- **URL:** [neon.tech](https://neon.tech)
+- **Purpose:** Serverless Postgres database that stores two types of data:
+  - `contact_messages` — every contact form submission (name, address, property type, budget, message, etc.)
+  - `subscribers` — email addresses from newsletter signups
+- **Plan:** Free tier
+- **Connection:** via `DATABASE_URL` environment variable
+
+### Resend — Transactional Email
+- **URL:** [resend.com](https://resend.com)
+- **Purpose:** Sends an email notification to `sean@bloomsbybethchs.com` every time someone submits the contact form. The email includes the full submission details in a formatted table.
+- **Plan:** Free tier (100 emails/day, 3,000/month)
+- **Note:** Currently sending from `onboarding@resend.dev`. To send from `noreply@bloomsbybethchs.com` instead, verify the domain at [resend.com/domains](https://resend.com/domains) and update the `from` field in `app/actions.ts`.
+
+---
+
+## Environment Variables
+
+These must be set in `.env.local` for local development and in **Vercel → Project → Settings → Environment Variables** for production.
+
+| Variable | Description | Where to find it |
+|---|---|---|
+| `DATABASE_URL` | Neon PostgreSQL connection string | Neon dashboard → your project → Connection string |
+| `RESEND_API_KEY` | Resend API key for sending emails | Resend dashboard → API Keys |
+| `NOTIFICATION_EMAIL` | Email address that receives contact form alerts | Currently `sean@bloomsbybethchs.com` |
+
+---
+
+## Local Development
+
 ```bash
-git clone https://github.com/yourusername/blooms-by-beth-v4.git
-cd blooms-by-beth-v4
-```
-
-2. Install dependencies:
-```bash
+# 1. Install dependencies
 npm install
-```
 
-3. Create a `.env.local` file in the root directory with the following variables:
-```
-EMAIL_SERVICE_ID=your_email_service_id
-EMAIL_TEMPLATE_ID=your_email_template_id
-EMAIL_PUBLIC_KEY=your_email_public_key
-```
+# 2. Create environment file
+cp .env.local.example .env.local
+# Then fill in your values
 
-4. Run the development server:
-```bash
+# 3. Run the development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-## Project Structure
-
-- `/app` - Next.js app router pages and layouts
-- `/components` - Reusable React components
-- `/public` - Static assets (images, fonts)
-- `/lib` - Utility functions and configurations
+---
 
 ## Deployment
 
-This project is optimized for deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
+Deployment is automatic. Any push to the `main` branch on GitHub triggers a Vercel build and deployment.
 
-## License
+To deploy manually:
 
-This project is private and confidential. All rights reserved.
+```bash
+git add .
+git commit -m "Your message"
+git push origin main
+```
+
+To push from the `v4` development branch to `main`:
+
+```bash
+git push origin v4:main --force
+```
+
+---
+
+## Project Structure
+
+```
+/app              — Pages and server actions (Next.js App Router)
+/components       — Reusable React components
+/components/ui    — shadcn/ui base components
+/public           — Static assets (images, favicon, robots.txt)
+/lib              — Utility functions
+```
+
+---
+
+## Key Files
+
+| File | Purpose |
+|---|---|
+| `app/actions.ts` | Server actions — handles contact form submission (saves to DB + sends email) and newsletter signup |
+| `components/contact-form.tsx` | Contact form UI component |
+| `components/newsletter-signup.tsx` | Newsletter signup UI component |
+| `app/sitemap.ts` | Auto-generated XML sitemap for SEO |
+| `public/robots.txt` | Search engine crawl rules |
+| `create-tables.mjs` | One-time script to set up the Neon database schema |
+| `next.config.ts` | Next.js configuration (image optimization, ESLint settings) |
