@@ -175,7 +175,7 @@ export async function submitContactForm(formData: FormData) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Blooms by Beth <onboarding@resend.dev>",
+          from: "Blooms by Beth <noreply@bloomsbybethchs.com>",
           to: [notificationEmail],
           reply_to: validatedData.email,
           subject: `New Inquiry from ${validatedData.firstName} ${validatedData.lastName}`,
