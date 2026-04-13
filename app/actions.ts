@@ -4,9 +4,7 @@ import { z } from "zod"
 import { neon } from '@neondatabase/serverless'
 import { revalidatePath } from "next/cache"
 
-// Configure the Neon client with direct connection string
 const DATABASE_URL = process.env.DATABASE_URL || '';
-console.log("Database URL exists:", !!DATABASE_URL);
 
 const contactSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -28,37 +26,6 @@ const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 })
 
-export async function sendMessage(formData: FormData) {
-  const validatedFields = contactSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    street: formData.get("street"),
-    city: formData.get("city"),
-    state: formData.get("state"),
-    zip: formData.get("zip"),
-    propertyType: formData.get("propertyType"),
-    projectTimeframe: formData.get("projectTimeframe"),
-    budgetRange: formData.get("budgetRange"),
-    contactMethod: formData.get("contactMethod"),
-    message: formData.get("message"),
-  })
-
-  if (!validatedFields.success) {
-    return {
-      error: "Invalid form data",
-      details: validatedFields.error.flatten().fieldErrors,
-    }
-  }
-
-  // TODO: Implement email sending logic here
-  // For now, we'll just return a success message
-  return {
-    success: true,
-    message: "Message sent successfully!",
-  }
-}
 
 export async function subscribeToNewsletter(formData: FormData) {
   try {
