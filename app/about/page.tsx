@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import { Header } from "@/components/header"
@@ -80,9 +81,11 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-12 text-center">
-              <Button className="bg-[#738c65] hover:bg-[#5d7251] text-white">
-                View Our Services <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href="/services">
+                <Button className="bg-[#738c65] hover:bg-[#5d7251] text-white">
+                  View Our Services <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
