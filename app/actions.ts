@@ -1,10 +1,9 @@
 "use server"
 
 import { z } from "zod"
-import { neon } from '@neondatabase/serverless'
 import { revalidatePath } from "next/cache"
-
-const DATABASE_URL = process.env.DATABASE_URL || '';
+import { sql } from "@/lib/db"
+import { sendContactNotification } from "@/lib/email"
 
 const contactSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -26,16 +25,12 @@ const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 })
 
-
 export async function subscribeToNewsletter(formData: FormData) {
   try {
     const validatedData = newsletterSchema.parse({
       email: formData.get("email"),
     })
 
-    // Create SQL executor using the neon function
-    const sql = neon(DATABASE_URL);
-    
     await sql`
       INSERT INTO subscribers (email, created_at)
       VALUES (${validatedData.email}, NOW())
@@ -49,7 +44,6 @@ export async function subscribeToNewsletter(formData: FormData) {
 }
 
 export async function submitContactForm(formData: FormData) {
-  // Validate the form data
   const validationResult = contactSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -64,97 +58,37 @@ export async function submitContactForm(formData: FormData) {
     budgetRange: formData.get("budgetRange"),
     contactMethod: formData.get("contactMethod"),
     message: formData.get("message"),
-  });
-  
-  // If validation fails, throw an error
+  })
+
   if (!validationResult.success) {
-    const errors = validationResult.error.flatten().fieldErrors;
-    console.error("Validation errors:", errors);
-    throw new Error("Validation failed");
+    const errors = validationResult.error.flatten().fieldErrors
+    console.error("Validation errors:", errors)
+    throw new Error("Validation failed")
   }
-  
-  // Extract validated data
-  const validatedData = validationResult.data;
+
+  const data = validationResult.data
 
   try {
-    // Create SQL executor using the neon function
-    const sql = neon(DATABASE_URL);
-
-    // Insert the data into the database using individual columns
     await sql`
       INSERT INTO contact_messages (
-        first_name,
-        last_name,
-        email,
-        phone,
-        street,
-        city,
-        state,
-        zip,
-        property_type,
-        project_timeframe,
-        budget_range,
-        contact_method,
-        message,
-        created_at
+        first_name, last_name, email, phone,
+        street, city, state, zip,
+        property_type, project_timeframe, budget_range, contact_method,
+        message, created_at
       ) VALUES (
-        ${validatedData.firstName},
-        ${validatedData.lastName},
-        ${validatedData.email},
-        ${validatedData.phone},
-        ${validatedData.street},
-        ${validatedData.city},
-        ${validatedData.state},
-        ${validatedData.zip},
-        ${validatedData.propertyType},
-        ${validatedData.projectTimeframe},
-        ${validatedData.budgetRange},
-        ${validatedData.contactMethod},
-        ${validatedData.message},
-        NOW()
+        ${data.firstName}, ${data.lastName}, ${data.email}, ${data.phone},
+        ${data.street}, ${data.city}, ${data.state}, ${data.zip},
+        ${data.propertyType}, ${data.projectTimeframe}, ${data.budgetRange}, ${data.contactMethod},
+        ${data.message}, NOW()
       )
-    `;
+    `
 
-    // Send email notification via Resend
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const notificationEmail = process.env.NOTIFICATION_EMAIL;
+    await sendContactNotification(data)
 
-    if (resendApiKey && notificationEmail) {
-      const emailBody = `
-        <h2>New Contact Form Submission — Blooms by Beth</h2>
-        <table cellpadding="6" style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">
-          <tr><td><strong>Name</strong></td><td>${validatedData.firstName} ${validatedData.lastName}</td></tr>
-          <tr><td><strong>Email</strong></td><td>${validatedData.email}</td></tr>
-          <tr><td><strong>Phone</strong></td><td>${validatedData.phone}</td></tr>
-          <tr><td><strong>Address</strong></td><td>${validatedData.street}, ${validatedData.city}, ${validatedData.state} ${validatedData.zip}</td></tr>
-          <tr><td><strong>Property Type</strong></td><td>${validatedData.propertyType}</td></tr>
-          <tr><td><strong>Timeframe</strong></td><td>${validatedData.projectTimeframe}</td></tr>
-          <tr><td><strong>Budget</strong></td><td>${validatedData.budgetRange}</td></tr>
-          <tr><td><strong>Preferred Contact</strong></td><td>${validatedData.contactMethod}</td></tr>
-          <tr><td><strong>Message</strong></td><td>${validatedData.message}</td></tr>
-        </table>
-      `;
-
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Blooms by Beth <noreply@bloomsbybethchs.com>",
-          to: [notificationEmail],
-          reply_to: validatedData.email,
-          subject: `New Inquiry from ${validatedData.firstName} ${validatedData.lastName}`,
-          html: emailBody,
-        }),
-      });
-    }
-
-    revalidatePath("/contact");
-    return { success: true };
+    revalidatePath("/contact")
+    return { success: true }
   } catch (error) {
-    console.error("Database error:", error);
-    throw new Error("Failed to save message to database");
+    console.error("Database error:", error)
+    throw new Error("Failed to save message to database")
   }
-} 
+}

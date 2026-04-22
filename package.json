@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:setup": "node scripts/create-tables.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
