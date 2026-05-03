@@ -17,7 +17,7 @@ export default function AboutPage() {
             <div className="grid gap-8 md:grid-cols-2 md:items-center">
               <div className="relative w-full mx-auto md:mx-0 max-w-md md:max-w-none aspect-square">
                 <Image
-                  src="/laura-2.jpg"
+                  src="/beth2.jpeg"
                   alt="Beth McGinty"
                   fill
                   className="object-cover rounded-md"

@@ -66,11 +66,10 @@ export default function Home() {
               <div className="md:w-1/2 relative">
                 <div className="aspect-[4/5] relative">
                   <Image
-                    src="/laura-placeholder.jpg"
+                    src="/beth1.jpeg"
                     alt="Beth tending to a garden"
                     fill
                     className="object-cover rounded-md"
-                    style={{ objectPosition: "20% 50%" }}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     quality={85}
                   />
