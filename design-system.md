@@ -60,8 +60,14 @@ All colors are currently applied as hardcoded Tailwind hex values (e.g. `text-[#
 
 | Role | Font | Class |
 |------|------|-------|
-| Serif (headings, logo, quotes) | Playfair Display / Geist Serif | `font-serif` |
-| Sans-serif (body, labels, nav) | System sans / Geist Sans | (default) |
+| Serif (headings, logo, quotes) | Cormorant Garamond (300–700) | `font-serif` |
+| Sans-serif (body, labels, nav) | Geist Sans | `font-sans` (default) |
+
+Both are loaded via `next/font/google` in `app/layout.tsx` and mapped to Tailwind's
+`serif` / `sans` keys in `tailwind.config.ts`. **The Tailwind `fontFamily` mapping is
+required** — without it the CSS variables are defined but never consumed, and both
+fonts silently fall back to system defaults. See `design-assessment.md` for the
+history of that bug.
 
 ### Heading Scale (current usage — no formal scale defined)
 
@@ -336,6 +342,10 @@ div (flex min-h-screen flex-col)
 ---
 
 ## Known Gaps (Design Decisions Needed)
+
+> A fuller audit of these gaps — with severity, root causes, and a recommended
+> sequence — lives in [`design-assessment.md`](./design-assessment.md).
+> Font loading (formerly the largest gap) is resolved as of 2026-07-28.
 
 1. **Error color** — `red-500` used for all form errors; consider a sage-adjacent warm red or define a brand `danger` color
 2. **Focus ring** — inputs use default Tailwind `ring-ring`; should be `#738c65` to match brand
