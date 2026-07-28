@@ -1,8 +1,14 @@
+import type { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ServiceCard } from "@/components/service-card"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Garden Design & Landscaping Services | Blooms by Beth",
+  description: "Explore Blooms by Beth's garden design and landscaping services for the Charleston area, from initial consultation through planting and installation.",
+}
 
 export default function ServicesPage() {
   return (

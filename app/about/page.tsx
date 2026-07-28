@@ -1,9 +1,15 @@
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+
+export const metadata: Metadata = {
+  title: "About Beth | Blooms by Beth",
+  description: "Meet Beth, a Charleston-area garden designer bringing Lowcountry charm and timeless elegance to gardens across the Southeast since 1998.",
+}
 
 export default function AboutPage() {
   return (

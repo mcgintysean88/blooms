@@ -17,7 +17,7 @@ export function Footer() {
             <p className="text-white/80 mb-6">
               Bringing Southern charm and timeless elegance to gardens across the Southeast since 1998.
             </p>
-            <SocialLinks className="text-white/80" />
+            <SocialLinks className="text-white/80 hover:text-white" />
           </div>
 
           {/* Column 2: Contact */}

@@ -1,7 +1,13 @@
 import { ContactForm } from "@/components/contact-form"
 import { Mail, MapPin } from "lucide-react"
+import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+
+export const metadata: Metadata = {
+  title: "Contact Us | Blooms by Beth",
+  description: "Get in touch with Blooms by Beth to discuss your garden project or schedule a consultation in the Charleston, SC area.",
+}
 
 export default function ContactPage() {
   return (

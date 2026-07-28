@@ -1,7 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+import type { Metadata } from "next"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+
+export const metadata: Metadata = {
+  title: "Portfolio | Blooms by Beth",
+  description: "Browse a gallery of completed garden design and landscaping projects by Blooms by Beth across the Charleston, SC area.",
+}
 
 export default function PortfolioPage() {
   return (
