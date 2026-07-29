@@ -43,7 +43,9 @@
 
     --input: 0 0% 89.8%;
 
-    --ring: 0 0% 3.9%;
+    /* Brand sage (#738c65). Drives focus-visible rings on Input, Textarea,
+       Select, Button and the Sheet close control via `ring-ring`. */
+    --ring: 98.5 16.2% 47.3%;
 
     --chart-1: 12 76% 61%;
 

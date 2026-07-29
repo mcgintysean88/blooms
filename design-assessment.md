@@ -74,10 +74,20 @@ Computes to a ~165px left margin at desktop, pushing the logo to center while na
 
 **Fixed:** Rule deleted from `globals.css` and the now-dead `header-logo` class removed from the markup. The flex container's existing `justify-between` produces logo-left / nav-right on desktop and logo-left / hamburger-right on mobile. Verified: logo left edge now sits at the container's 16px padding, down from ~165px.
 
-#### FM-1 ⬜ Select inputs don't match text inputs
-`components/contact-form.tsx` uses native `<select>` styled inline (`border-gray-300 rounded-md p-2 h-10`) sitting directly beside shadcn `<Input>` components. Different border color, height, and text weight — visibly mismatched within the same form.
+#### FM-1 ✅ Select inputs didn't match text inputs — **done 2026-07-29**
+`components/contact-form.tsx` used native `<select>` styled inline (`border-gray-300 rounded-md p-2 h-10`) sitting directly beside shadcn `<Input>` components — different height, border colour and padding within the same form.
 
-**Fix:** Use the shadcn `Select` component.
+**Fixed — but not the way this item originally proposed.** The original fix said "use the shadcn `Select` component." On implementation that turned out to be the wrong call here:
+
+- shadcn's `Select` was not installed, and `@radix-ui/react-select` is not a dependency.
+- Radix's Select is a custom listbox, not a native control. It only reaches `FormData` via a hidden input — a behavioural change on the lead-capture path, which is the one flow this business actually depends on (see BLO-18, "Fix Lead Form Submissions").
+- Native selects also give phones their own picker UI, which is better on mobile for 4–6 option lists.
+
+The complaint in FM-1 is *visual*, so it got a visual fix: a new `components/ui/select.tsx` wrapping a **native** `<select>` styled to match `<Input />` exactly, with `appearance-none` plus a `ChevronDown`, and `invalid:text-muted-foreground` so the unselected placeholder option is muted the same way `<Input />`'s placeholder is.
+
+Verified by measurement — `<Input>` and `<Select>` now report identical height (36px), border colour (`rgb(229,229,229)`), radius (6px), font size (14px) and left padding (12px). The select carries 32px right padding for the chevron. Placeholder state computes to muted `rgb(115,115,115)`; once a value is chosen it computes to `rgb(10,10,10)`, matching input text.
+
+If a custom listbox is ever wanted for design reasons, that is a deliberate follow-up — not a prerequisite for visual consistency.
 
 ---
 
@@ -157,13 +167,23 @@ Within a single card: icon centered, title centered, body text left-aligned.
 
 ### 🟡 Forms
 
-#### FM-2 ⬜ 13 fields presented as one undifferentiated wall
-The contact form has no grouping, no card, and no visual containment against the white page background.
+#### FM-2 ✅ 13 fields presented as one undifferentiated wall — **done 2026-07-29**
+The contact form had no grouping and no visual containment against the white page background.
 
-**Fix:** Group into three fieldsets — *Your Info* / *Property* / *Project Details* — and consider a bordered card on a `#f8f5f0` background.
+**Fixed:** Split into three semantic `<fieldset>`s with serif `<legend>`s — **Your Information** / **Property** / **Project Details**. Fieldsets carry `min-w-0` so their default `min-width: min-content` cannot break the inner grids.
 
-#### FM-3 ⬜ Focus rings are default near-black, not brand sage
-Inputs focus to shadcn's default `ring-ring` rather than `#738c65`.
+Two grouping judgements worth knowing:
+- **Preferred Contact Method** moved into *Your Information*. It describes how to reach the person, not the project.
+- **Project Timeframe** and **Budget Range** now sit side by side in a 2-column grid rather than stacked full-width, which removes two full-width rows from the wall.
+
+The optional beige card wrapper was **not** added — the fieldset legends already carry the grouping, and a card felt like over-containment on an otherwise white page. Still available if wanted.
+
+#### FM-3 ✅ Focus rings were default near-black — **done 2026-07-29**
+Inputs focused to shadcn's default `ring-ring`, which resolved to near-black (`--ring: 0 0% 3.9%`).
+
+**Fixed at the token level** rather than per-component: `--ring` in `globals.css` is now `98.5 16.2% 47.3%`, the exact HSL of sage `#738c65` (verified to round-trip back to that hex). Because every shadcn component focuses via `ring-ring`, this single change covers Input, Textarea, the new Select, Button and the Sheet close control at once.
+
+Verified: `hsl(var(--ring))` computes to `rgb(115, 140, 101)` = `#738c65`.
 
 #### FM-4 ⬜ Error red clashes with the palette
 Generic `red-500` sits harshly against the muted sage system. A warmer, desaturated red would integrate better.
@@ -188,9 +208,11 @@ Philosophy cards (About) and `ServiceCard` are visually near-identical but separ
 | ~~2~~ | ~~**F-1** brand color tokens~~ | ✅ **Done** — foundation for everything below |
 | ~~3~~ | ~~**N-1, N-4, N-5** header fixes~~ | ✅ **Done** |
 | ~~4~~ | ~~**N-2, N-3** drawer bug + a11y~~ | ✅ **Done** |
-| 5 | **FM-1, FM-2, FM-3** form polish | Highest-converting page on the site |
-| 6 | **L-1, L-2, L-3, T-1, T-2, T-3** | Layout and type refinement |
+| ~~5~~ | ~~**FM-1, FM-2, FM-3** form polish~~ | ✅ **Done** |
+| 6 | **L-1, L-2, L-3, T-1, T-2, T-3** | Layout and type refinement — **next up** |
 | 7 | **C-1, C-2** | Housekeeping |
+
+Still open on the form: **FM-4** (error red clashes with the palette).
 
 ---
 

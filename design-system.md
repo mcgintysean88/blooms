@@ -17,7 +17,7 @@ A marketing and inquiry website for a Charleston-area garden design and landscap
 ## Color Palette
 
 All brand colors are defined as named tokens in `tailwind.config.ts`. **Use the token,
-never a raw hex.** Arbitrary values like `text-[#3c4c30]` should not appear in components.
+never a raw hex.** Arbitrary values like `text-sage-dark` should not appear in components.
 
 ### Brand Colors
 
@@ -37,14 +37,13 @@ Usage: `text-sage-dark`, `bg-sage`, `hover:bg-sage-hover`, `text-body`, `bg-beig
 That is a plain metadata string, not a Tailwind class, so it cannot use a token and
 must be kept in sync with `sage` by hand.
 
-### Utility Colors (currently unbranded — gaps to resolve)
+### Utility Colors
 
-| Value | Where Used | Issue |
-|-------|-----------|-------|
-| `gray-300` | Form select borders | Not in brand palette |
-| `gray-500` | Character counter text | Not in brand palette |
-| `red-500` | Form error states, error messages | Not in brand palette |
-| `#e5e7eb` | Border accents | Not in brand palette |
+| Value | Where Used | Status |
+|-------|-----------|--------|
+| `red-500` | Form error states, error messages | Not in brand palette — open (FM-4) |
+| `gray-200` | Contact page section divider | Neutral; the one call site if a brand border colour is defined |
+| `border-input` | Input / Select / Textarea borders | shadcn token, intentionally neutral |
 | `black/30` | Hero image overlay | Acceptable utility use |
 | `white/80`, `white/70` | Footer text opacity | Acceptable on dark background |
 
@@ -96,12 +95,13 @@ history of that bug.
 | Form labels | `text-sm` | `font-medium` | `#3c4c30` |
 | Error messages | `text-xs` | default | `red-500` (gap — needs brand color) |
 | Caption / meta | `text-sm` | default | `white/70` or `#5a5a5a` |
-| Character counter | `text-xs` | default | `gray-500` (gap — needs brand color) |
+| Character counter | `text-xs` | default | `body` |
 
 ### Nav Link
 
-- Desktop: `text-[1.25rem] font-medium` — currently non-standard size (gap)
-- Mobile: `text-lg font-medium`
+- `text-base font-medium` on both desktop and in the mobile drawer
+- Inactive: `text-body hover:text-sage`
+- Active (current route): `text-sage-dark` + `underline decoration-sage decoration-2 underline-offset-8`, with `aria-current="page"`
 
 ---
 
@@ -155,12 +155,12 @@ space-y-2   — label + input stacking within a field
 
 **Primary (default)**
 ```
-bg-[#738c65] hover:bg-[#5d7251] text-white
+bg-sage hover:bg-sage-hover text-white
 ```
 
 **Primary on dark / inverted**
 ```
-bg-white hover:bg-[#f8f5f0] text-[#3c4c30]
+bg-white hover:bg-beige text-sage-dark
 ```
 *(Used in hero — white button on image overlay)*
 
@@ -181,24 +181,30 @@ bg-white hover:bg-[#f8f5f0] text-[#3c4c30]
 
 **Text Input** — uses shadcn `<Input />`  
 **Textarea** — uses shadcn `<Textarea />` with `min-h-[150px]`  
-**Select** — native `<select>` with inline styles (gap — not using shadcn component)
+**Select** — `components/ui/select.tsx`, a **native** `<select>` styled to match `<Input />`
+(same height, border, radius, padding). Deliberately native, not a Radix listbox: these
+fields submit via `FormData` and native selects give phones their own picker. The
+placeholder option is muted via `invalid:text-muted-foreground`.
 
 **Field anatomy:**
 ```
 <div class="space-y-2">
-  <label class="text-sm font-medium text-[#3c4c30]" />
+  <label class="text-sm font-medium text-sage-dark" />
   <Input class="w-full [border-red-500 if error]" />
   <p class="text-red-500 text-xs mt-1" />  ← error message
 </div>
 ```
 
-**Select field anatomy (current — inconsistent):**
+**Select field anatomy:**
 ```
-<select class="w-full border border-gray-300 rounded-md p-2 h-10 [border-red-500 if error]" />
+<Select name="..." required defaultValue="">   ← matches <Input /> metrics
+  <option value="">Select a …</option>          ← muted while :invalid
+  ...
+</Select>
 ```
 
 **Error state (current gap):** Uses generic `red-500` — not brand-aligned.  
-**Focus state (current gap):** Uses Tailwind/browser default `focus-visible:ring-ring` — not sage-aligned.
+**Focus state:** `focus-visible:ring-ring`, where `--ring` is sage `#738c65`. Resolved 2026-07-29.
 
 ---
 
@@ -207,9 +213,9 @@ bg-white hover:bg-[#f8f5f0] text-[#3c4c30]
 ```
 Card (border-none, shadow-sm, hover:shadow-md, transition-shadow)
 └── CardContent (p-6)
-    ├── Icon (h-10 w-10 text-[#738c65], centered)
-    ├── H3 (text-xl font-serif text-[#3c4c30], centered)
-    └── p (text-[#5a5a5a])
+    ├── Icon (h-10 w-10 text-sage, centered)
+    ├── H3 (text-xl font-serif text-sage-dark, centered)
+    └── p (text-body)
 ```
 
 Available icons: `FlowerIcon`, `Calendar`, `Palette`, `Scissors`, `Sprout`, `Shovel`
@@ -219,9 +225,9 @@ Available icons: `FlowerIcon`, `Calendar`, `Palette`, `Scissors`, `Sprout`, `Sho
 ### Philosophy Card (About page)
 
 ```
-div (bg-[#f8f5f0] p-6 rounded-md)
-├── H3 (text-xl font-serif text-[#3c4c30] mb-3 text-center)
-└── p (text-[#5a5a5a] text-center)
+div (bg-beige p-6 rounded-md)
+├── H3 (text-xl font-serif text-sage-dark mb-3 text-center)
+└── p (text-body text-center)
 ```
 
 Note: This is structurally similar to ServiceCard but implemented inline — candidate for extraction into a shared component.
@@ -233,8 +239,8 @@ Note: This is structurally similar to ServiceCard but implemented inline — can
 ```
 header (sticky top-0 z-50, bg-white/80 backdrop-blur-md, border-b border-border/40)
 └── container (h-16, flex, items-center, justify-between, px-4)
-    ├── Logo (Flower icon + serif wordmark, text-[#738c65] / text-[#3c4c30])
-    ├── Desktop nav (hidden md:flex, gap-4) — links text-[#5a5a5a] hover:text-[#738c65]
+    ├── Logo (Flower icon + serif wordmark, text-sage / text-sage-dark)
+    ├── Desktop nav (hidden md:flex, gap-4) — links text-body hover:text-sage
     └── Mobile Sheet (md:hidden) — Sheet drawer from right, same nav links
 ```
 
@@ -243,7 +249,7 @@ header (sticky top-0 z-50, bg-white/80 backdrop-blur-md, border-b border-border/
 ### Footer
 
 ```
-footer (bg-[#3c4c30] text-white)
+footer (bg-sage-dark text-white)
 └── container (py-12 md:py-16 px-4)
     ├── 3-column grid (gap-10)
     │   ├── Col 1: Logo + tagline + social links (text-white/80)
@@ -265,7 +271,7 @@ section (relative)
 └── Content (absolute inset-0 z-20, flex items-center justify-center, text-center)
     ├── H1 (text-5xl md:text-7xl font-serif font-light text-white)
     ├── p (text-2xl md:text-3xl text-white/90 font-light)
-    └── Button (bg-white hover:bg-[#f8f5f0] text-[#3c4c30], text-lg px-8 py-6)
+    └── Button (bg-white hover:bg-beige text-sage-dark, text-lg px-8 py-6)
 ```
 
 ---
@@ -275,8 +281,8 @@ section (relative)
 Small floating card used on the home intro section:
 ```
 div (absolute -bottom-6 -left-6, bg-white p-4 rounded shadow-md w-48, hidden md:block)
-├── p (font-serif text-[#3c4c30] italic) — quote text
-└── p (text-right text-sm mt-2 text-[#738c65]) — attribution
+├── p (font-serif text-sage-dark italic) — quote text
+└── p (text-right text-sm mt-2 text-sage) — attribution
 ```
 
 ---
@@ -286,10 +292,10 @@ div (absolute -bottom-6 -left-6, bg-white p-4 rounded shadow-md w-48, hidden md:
 Inline pattern — candidate for a reusable component:
 ```
 div (flex items-start gap-4)
-├── span (w-12 h-12 bg-[#738c65] rounded-full, flex items-center justify-center, text-white font-bold, shrink-0)
+├── span (w-12 h-12 bg-sage rounded-full, flex items-center justify-center, text-white font-bold, shrink-0)
 └── div
-    ├── h3 (font-serif text-[#3c4c30])
-    └── p (text-[#5a5a5a])
+    ├── h3 (font-serif text-sage-dark)
+    └── p (text-body)
 ```
 
 ---
@@ -356,12 +362,12 @@ div (flex min-h-screen flex-col)
 > Font loading (formerly the largest gap) is resolved as of 2026-07-28.
 
 1. **Error color** — `red-500` used for all form errors; consider a sage-adjacent warm red or define a brand `danger` color
-2. **Focus ring** — inputs use default Tailwind `ring-ring`; should be `#738c65` to match brand
-3. **Select inputs** — native `<select>` styled inline; should match `<Input />` visually
-4. **Nav link font size** — desktop uses non-standard `text-[1.25rem]`; mobile uses `text-lg` — these should be unified
+2. ~~**Focus ring**~~ — resolved: `--ring` is now sage `#738c65`, so every shadcn control focuses to brand
+3. ~~**Select inputs**~~ — resolved: `components/ui/select.tsx` matches `<Input />`
+4. ~~**Nav link font size**~~ — resolved: both are `text-base`
 5. **Hero button size** — one-off `text-lg px-8 py-6`; a `size="lg"` button variant would formalize this
-6. **Character counter / helper text color** — `gray-500` used; should use `#5a5a5a` or a dedicated muted token
-7. **No Tailwind config tokens** — all brand colors are raw hex strings; should be added to `tailwind.config.ts` as named tokens for refactor-safety
+6. ~~**Character counter / helper text color**~~ — resolved: now uses the `body` token
+7. ~~**No Tailwind config tokens**~~ — resolved: brand palette is tokenised in `tailwind.config.ts`
 8. **Philosophy cards vs ServiceCards** — visually similar but separate implementations; candidate for a shared `<FeatureCard />` component
 9. **Process steps** — inline pattern in services page with no reusable component
-10. **No defined `font-size` token for nav** — desktop and mobile nav sizes differ with no documented standard
+10. ~~**No defined `font-size` token for nav**~~ — resolved: nav is `text-base` everywhere
