@@ -36,13 +36,13 @@ export function NewsletterSignup() {
   }
 
   return (
-    <div className="bg-[#f8f5f0] rounded-lg p-8 md:p-12">
+    <div className="bg-beige rounded-lg p-8 md:p-12">
       <div className="max-w-2xl mx-auto text-center">
         <div className="flex justify-center mb-4">
-          <Flower className="h-8 w-8 text-[#738c65]" />
+          <Flower className="h-8 w-8 text-sage" />
         </div>
-        <h2 className="text-2xl md:text-3xl font-serif text-[#3c4c30] mb-4">Join Our Newsletter</h2>
-        <p className="text-[#5a5a5a] mb-6">
+        <h2 className="text-2xl md:text-3xl font-serif text-sage-dark mb-4">Join Our Newsletter</h2>
+        <p className="text-body mb-6">
           Stay connected with seasonal planting recommendations, gardening industry insights, and exclusive tips by signing up for our coming newsletter - inspiration delivered directly to your inbox.
         </p>
         
@@ -57,7 +57,7 @@ export function NewsletterSignup() {
           />
           <Button 
             type="submit" 
-            className="bg-[#738c65] hover:bg-[#5d7251] text-white whitespace-nowrap"
+            className="bg-sage hover:bg-sage-hover text-white whitespace-nowrap"
             disabled={status === "loading"}
           >
             {status === "loading" ? "Signing up..." : "Sign Up"}
@@ -65,7 +65,7 @@ export function NewsletterSignup() {
         </form>
 
         {status === "success" && (
-          <p className="text-[#738c65] mt-4">Thank you for subscribing!</p>
+          <p className="text-sage mt-4">Thank you for subscribing!</p>
         )}
         {status === "error" && (
           <p className="text-red-500 mt-4">{errorMessage}</p>

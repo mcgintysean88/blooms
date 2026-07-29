@@ -50,12 +50,20 @@ Initially implemented **Playfair Display** (the name recorded in `design-system.
 
 ### 🔴 High impact
 
-#### F-1 ⬜ No brand color tokens in Tailwind
-All six brand colors are raw hex strings repeated across every file — `text-[#3c4c30]` alone appears dozens of times. A single palette change means a find-and-replace across the whole codebase.
+#### F-1 ✅ Brand color tokens — **done 2026-07-29**
+All six brand colors were raw hex strings repeated across the codebase — **174 hardcoded usages** across 16 files (`#3c4c30` alone appeared 95 times). Any palette change meant a codebase-wide find-and-replace.
 
-**Fix:** Promote to `tailwind.config.ts` as named tokens (`sage-dark`, `sage`, `sage-hover`, `body`, `beige`, `green-light`) so usage becomes `text-sage-dark`.
+**Fixed:** Tokens defined in `tailwind.config.ts` (`sage` / `sage-dark` / `sage-hover` / `sage-pale`, `beige`, `body`) and all 174 usages replaced. Zero bracketed hex values remain in `app/` or `components/`.
 
-**Why first:** This is foundational. Every other visual change below becomes cheaper and safer once it's done. Recommended as the next task.
+Verified as a true no-op by reading the generated CSS rules in-browser: every token resolves to its exact original hex, and every used variant is generated —
+`.bg-sage-dark`/`.text-sage-dark` → `#3c4c30`, `.bg-sage`/`.text-sage`/`.hover:text-sage` → `#738c65`, `.hover:bg-sage-hover` → `#5d7251`, `.text-body` → `#5a5a5a`, `.bg-beige`/`.hover:bg-beige` → `#f8f5f0`, `.bg-sage-pale` → `#f0f4eb`.
+
+Two anomalies were found and resolved during the sweep:
+
+- **`app/error.tsx:27`** used `hover:bg-[#5a6e4d]` — a rogue green that existed nowhere else in the design system. Every other primary button hovers to `#5d7251`. Normalized to `sage-hover`, so the error page's button now matches every other button on the site.
+- **`app/contact/page.tsx:33`** used `border-[#e5e7eb]`, which is exactly Tailwind's `gray-200`. Replaced with the standard utility. This is still a non-brand neutral — if a brand border color is ever defined, this is the one call site to update.
+
+**Remaining exception:** `app/layout.tsx:19` sets `themeColor: '#738c65'` in the `Viewport` export. It is a plain metadata string, not a class, so it cannot take a token and must be hand-synced with `sage`.
 
 #### N-1 ⬜ Logo is force-centered by a CSS hack
 `app/globals.css` contains:
@@ -173,8 +181,8 @@ Philosophy cards (About) and `ServiceCard` are visually near-identical but separ
 | Order | Item | Rationale |
 |---|---|---|
 | ~~1~~ | ~~Font pipeline~~ | ✅ **Done** — transformative |
-| 2 | **F-1** brand color tokens | Foundation; makes everything below cheaper |
-| 3 | **N-1, N-4, N-5** header fixes | High visibility, low risk |
+| ~~2~~ | ~~**F-1** brand color tokens~~ | ✅ **Done** — foundation for everything below |
+| 3 | **N-1, N-4, N-5** header fixes | High visibility, low risk — **next up** |
 | 4 | **N-2, N-3** drawer bug + a11y | Straight bug fixes |
 | 5 | **FM-1, FM-2, FM-3** form polish | Highest-converting page on the site |
 | 6 | **L-1, L-2, L-3, T-1, T-2, T-3** | Layout and type refinement |

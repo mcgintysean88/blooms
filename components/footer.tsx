@@ -5,7 +5,7 @@ import { SocialLinks } from "@/components/social-links"
 
 export function Footer() {
   return (
-    <footer className="bg-[#3c4c30] text-white">
+    <footer className="bg-sage-dark text-white">
       <div className="container mx-auto py-12 md:py-16 px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Column 1: About */}

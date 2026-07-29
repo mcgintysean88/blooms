@@ -33,7 +33,7 @@ export default function Home() {
                 Bringing joy and beauty to your garden
               </p>
               <Link href="/contact">
-                <Button className="bg-white hover:bg-[#f8f5f0] text-[#3c4c30] text-lg px-8 py-6 rounded-md">
+                <Button className="bg-white hover:bg-beige text-sage-dark text-lg px-8 py-6 rounded-md">
                   Contact Us
                 </Button>
               </Link>
@@ -42,22 +42,22 @@ export default function Home() {
         </section>
 
         {/* Introduction Section */}
-        <section className="py-16 md:py-24 px-4 bg-[#f8f5f0]">
+        <section className="py-16 md:py-24 px-4 bg-beige">
           <div className="container mx-auto max-w-5xl">
             <div className="flex flex-col md:flex-row gap-12 items-center">
               <div className="md:w-1/2">
-                <h2 className="text-3xl md:text-4xl font-serif text-[#3c4c30] mb-6">
+                <h2 className="text-3xl md:text-4xl font-serif text-sage-dark mb-6">
                   Lowcountry Gardens with a Caring Touch
                 </h2>
-                <p className="text-lg text-[#5a5a5a] mb-6 leading-relaxed">
+                <p className="text-lg text-body mb-6 leading-relaxed">
                 At Blooms by Beth, we believe flowers and gardens bring joy to everyday life. With 30 years of experience cultivating the rich soils of the Lowcountry, Beth and her team bring their passion for gardening to every project.
                 </p>
-                <p className="text-lg text-[#5a5a5a] mb-8 leading-relaxed">
+                <p className="text-lg text-body mb-8 leading-relaxed">
                 Whether featuring classic native perennials, cheerful annuals, or statement tropical and citrus specimens, our gardens are designed to surround your home with living beauty that lifts your spirits and delights the senses every day.
                 </p>
                 <div className="flex justify-center">
                   <Link href="/about">
-                    <Button className="bg-[#738c65] hover:bg-[#5d7251] text-white">
+                    <Button className="bg-sage hover:bg-sage-hover text-white">
                       About Beth <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -75,8 +75,8 @@ export default function Home() {
                   />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded shadow-md w-48 hidden md:block">
-                  <p className="font-serif text-[#3c4c30] italic">&quot;Every garden has its own story, and I&apos;m here to help you tell yours.&quot;</p>
-                  <p className="text-right text-sm mt-2 text-[#738c65]">— Beth</p>
+                  <p className="font-serif text-sage-dark italic">&quot;Every garden has its own story, and I&apos;m here to help you tell yours.&quot;</p>
+                  <p className="text-right text-sm mt-2 text-sage">— Beth</p>
                 </div>
               </div>
             </div>
@@ -87,8 +87,8 @@ export default function Home() {
         <section className="py-12 md:py-16 px-4">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-serif text-[#3c4c30] mb-4">Our Services</h2>
-              <p className="text-lg text-[#5a5a5a] max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-sage-dark mb-4">Our Services</h2>
+              <p className="text-lg text-body max-w-2xl mx-auto">
                 From seasonal plantings to garden transformations, we offer a range of services to bring the
                 joy of flowers to your outdoor space.
               </p>

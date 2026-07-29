@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Facebook, Instagram } from "lucide-react"
 
-export function SocialLinks({ className = "text-[#738c65] hover:text-[#5d7251]" }: { className?: string }) {
+export function SocialLinks({ className = "text-sage hover:text-sage-hover" }: { className?: string }) {
   return (
     <div className="flex gap-4">
       <Link

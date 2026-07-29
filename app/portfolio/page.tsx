@@ -18,8 +18,8 @@ export default function PortfolioPage() {
         <section className="py-20 md:py-32 px-4">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-serif font-light text-[#3c4c30] mb-4">Our Portfolio</h1>
-              <p className="text-lg text-[#5a5a5a] max-w-2xl mx-auto">
+              <h1 className="text-4xl md:text-6xl font-serif font-light text-sage-dark mb-4">Our Portfolio</h1>
+              <p className="text-lg text-body max-w-2xl mx-auto">
                 Each garden tells a unique story. We are glad to be able to share these with you.
               </p>
             </div>
@@ -36,9 +36,9 @@ export default function PortfolioPage() {
                   />
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="font-serif text-xl text-[#3c4c30] mb-2">Downtown Flower Box</h3>
-                  <p className="text-[#5a5a5a] mb-3">Vibrant and seasonal flower boxes</p>
-                  <p className="text-sm text-[#738c65]">Charleston, SC</p>
+                  <h3 className="font-serif text-xl text-sage-dark mb-2">Downtown Flower Box</h3>
+                  <p className="text-body mb-3">Vibrant and seasonal flower boxes</p>
+                  <p className="text-sm text-sage">Charleston, SC</p>
                 </CardContent>
               </Card>
               
@@ -53,9 +53,9 @@ export default function PortfolioPage() {
                   />
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="font-serif text-xl text-[#3c4c30] mb-2">Hanging Baskets</h3>
-                  <p className="text-[#5a5a5a] mb-3">Hanging baskets with seasonal blooms</p>
-                  <p className="text-sm text-[#738c65]">Savannah, GA</p>
+                  <h3 className="font-serif text-xl text-sage-dark mb-2">Hanging Baskets</h3>
+                  <p className="text-body mb-3">Hanging baskets with seasonal blooms</p>
+                  <p className="text-sm text-sage">Savannah, GA</p>
                 </CardContent>
               </Card>
               
@@ -70,9 +70,9 @@ export default function PortfolioPage() {
                   />
                 </div>
                 <CardContent className="p-6">
-                  <h3 className="font-serif text-xl text-[#3c4c30] mb-2">Beach Garden</h3>
-                  <p className="text-[#5a5a5a] mb-3">Sullivan&apos;s Island flowery getaway</p>
-                  <p className="text-sm text-[#738c65]">Sullivan&apos;s Island, SC</p>
+                  <h3 className="font-serif text-xl text-sage-dark mb-2">Beach Garden</h3>
+                  <p className="text-body mb-3">Sullivan&apos;s Island flowery getaway</p>
+                  <p className="text-sm text-sage">Sullivan&apos;s Island, SC</p>
                 </CardContent>
               </Card>
             </div>

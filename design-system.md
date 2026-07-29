@@ -16,18 +16,26 @@ A marketing and inquiry website for a Charleston-area garden design and landscap
 
 ## Color Palette
 
-All colors are currently applied as hardcoded Tailwind hex values (e.g. `text-[#3c4c30]`). They are not yet defined as Tailwind config tokens.
+All brand colors are defined as named tokens in `tailwind.config.ts`. **Use the token,
+never a raw hex.** Arbitrary values like `text-[#3c4c30]` should not appear in components.
 
 ### Brand Colors
 
-| Name | Hex | Tailwind Usage | Purpose |
-|------|-----|----------------|---------|
-| Dark Sage | `#3c4c30` | `text-[#3c4c30]`, `bg-[#3c4c30]` | Headings, footer background, logo wordmark |
-| Mid Sage | `#738c65` | `text-[#738c65]`, `bg-[#738c65]` | Buttons (default), icons, accents, success states |
-| Hover Sage | `#5d7251` | `hover:bg-[#5d7251]` | Button hover state |
-| Body Text | `#5a5a5a` | `text-[#5a5a5a]` | Paragraph text, secondary content |
-| Warm Beige | `#f8f5f0` | `bg-[#f8f5f0]` | Section backgrounds, hero CTA button hover |
-| Light Green | `#f0f4eb` | `bg-[#f0f4eb]` | Alternate section backgrounds, icon backgrounds |
+| Name | Token | Hex | Purpose |
+|------|-------|-----|---------|
+| Dark Sage | `sage-dark` | `#3c4c30` | Headings, footer background, logo wordmark |
+| Mid Sage | `sage` | `#738c65` | Buttons (default), icons, accents, success states |
+| Hover Sage | `sage-hover` | `#5d7251` | Button hover state |
+| Body Text | `body` | `#5a5a5a` | Paragraph text, secondary content |
+| Warm Beige | `beige` | `#f8f5f0` | Section backgrounds, hero CTA button hover |
+| Light Green | `sage-pale` | `#f0f4eb` | Alternate section backgrounds, icon backgrounds |
+
+Usage: `text-sage-dark`, `bg-sage`, `hover:bg-sage-hover`, `text-body`, `bg-beige`,
+`bg-sage-pale`. Opacity modifiers work as normal — `text-sage/30`, `bg-beige/50`.
+
+**Exception:** `app/layout.tsx` sets `themeColor: '#738c65'` in the `Viewport` export.
+That is a plain metadata string, not a Tailwind class, so it cannot use a token and
+must be kept in sync with `sage` by hand.
 
 ### Utility Colors (currently unbranded — gaps to resolve)
 

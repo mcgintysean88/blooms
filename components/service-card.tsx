@@ -11,19 +11,19 @@ export function ServiceCard({ title, description, icon }: ServiceCardProps) {
   const IconComponent = () => {
     switch (icon) {
       case "Palette":
-        return <Palette className="h-10 w-10 text-[#738c65]" />
+        return <Palette className="h-10 w-10 text-sage" />
       case "Calendar":
-        return <Calendar className="h-10 w-10 text-[#738c65]" />
+        return <Calendar className="h-10 w-10 text-sage" />
       case "Scissors":
-        return <Scissors className="h-10 w-10 text-[#738c65]" />
+        return <Scissors className="h-10 w-10 text-sage" />
       case "FlowerIcon":
-        return <FlowerIcon className="h-10 w-10 text-[#738c65]" />
+        return <FlowerIcon className="h-10 w-10 text-sage" />
       case "Sprout":
-        return <Sprout className="h-10 w-10 text-[#738c65]" />
+        return <Sprout className="h-10 w-10 text-sage" />
       case "Shovel":
-        return <Shovel className="h-10 w-10 text-[#738c65]" />
+        return <Shovel className="h-10 w-10 text-sage" />
       default:
-        return <FlowerIcon className="h-10 w-10 text-[#738c65]" />
+        return <FlowerIcon className="h-10 w-10 text-sage" />
     }
   }
 
@@ -33,8 +33,8 @@ export function ServiceCard({ title, description, icon }: ServiceCardProps) {
         <div className="mb-4 flex justify-center">
           <IconComponent />
         </div>
-        <h3 className="text-xl font-serif text-[#3c4c30] mb-2 text-center">{title}</h3>
-        <p className="text-[#5a5a5a]">{description}</p>
+        <h3 className="text-xl font-serif text-sage-dark mb-2 text-center">{title}</h3>
+        <p className="text-body">{description}</p>
       </CardContent>
     </Card>
   )

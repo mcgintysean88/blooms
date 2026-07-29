@@ -77,7 +77,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label htmlFor="firstName" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="firstName" className="text-sm font-medium text-sage-dark">
             First Name
           </label>
           <Input
@@ -93,7 +93,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="lastName" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="lastName" className="text-sm font-medium text-sage-dark">
             Last Name
           </label>
           <Input
@@ -111,7 +111,7 @@ export function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="email" className="text-sm font-medium text-sage-dark">
             Email
           </label>
           <Input
@@ -128,7 +128,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="phone" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="phone" className="text-sm font-medium text-sage-dark">
             Phone
           </label>
           <Input
@@ -146,7 +146,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="street" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="street" className="text-sm font-medium text-sage-dark">
           Street Address
         </label>
         <Input
@@ -163,7 +163,7 @@ export function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-2">
-          <label htmlFor="city" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="city" className="text-sm font-medium text-sage-dark">
             City
           </label>
           <Input
@@ -179,7 +179,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="state" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="state" className="text-sm font-medium text-sage-dark">
             State
           </label>
           <Input
@@ -195,7 +195,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="zip" className="text-sm font-medium text-[#3c4c30]">
+          <label htmlFor="zip" className="text-sm font-medium text-sage-dark">
             ZIP Code
           </label>
           <Input
@@ -212,7 +212,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="propertyType" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="propertyType" className="text-sm font-medium text-sage-dark">
           Property Type
         </label>
         <select 
@@ -233,7 +233,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="projectTimeframe" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="projectTimeframe" className="text-sm font-medium text-sage-dark">
           Project Timeframe
         </label>
         <select 
@@ -255,7 +255,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="budgetRange" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="budgetRange" className="text-sm font-medium text-sage-dark">
           Budget Range
         </label>
         <select
@@ -278,7 +278,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="contactMethod" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="contactMethod" className="text-sm font-medium text-sage-dark">
           Preferred Contact Method
         </label>
         <select 
@@ -299,7 +299,7 @@ export function ContactForm() {
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="message" className="text-sm font-medium text-[#3c4c30]">
+        <label htmlFor="message" className="text-sm font-medium text-sage-dark">
           Message
         </label>
         <div className="relative">
@@ -324,14 +324,14 @@ export function ContactForm() {
 
       <Button
         type="submit"
-        className="w-full bg-[#738c65] hover:bg-[#5d7251] text-white"
+        className="w-full bg-sage hover:bg-sage-hover text-white"
         disabled={status === "loading"}
       >
         {status === "loading" ? "Sending..." : "Send Message"}
       </Button>
 
       {status === "success" && (
-        <p className="text-[#738c65] text-center">Thank you for your message. We&apos;ll be in touch soon!</p>
+        <p className="text-sage text-center">Thank you for your message. We&apos;ll be in touch soon!</p>
       )}
       {status === "error" && (
         <p className="text-red-500 text-center">{errorMessage}</p>

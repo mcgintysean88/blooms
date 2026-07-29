@@ -20,8 +20,8 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2 header-logo">
           <Link href="/" className="flex items-center gap-2">
-            <Flower className="h-6 w-6 text-[#738c65]" />
-            <span className="font-serif text-xl text-[#3c4c30]">Blooms by Beth</span>
+            <Flower className="h-6 w-6 text-sage" />
+            <span className="font-serif text-xl text-sage-dark">Blooms by Beth</span>
           </Link>
         </div>
 
@@ -31,7 +31,7 @@ export function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-[1.25rem] font-medium text-[#5a5a5a] transition-colors hover:text-[#738c65]"
+              className="text-[1.25rem] font-medium text-body transition-colors hover:text-sage"
             >
               {item.label}
             </Link>
@@ -49,8 +49,8 @@ export function Header() {
             <div className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-8">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
-                  <Flower className="h-6 w-6 text-[#738c65]" />
-                  <span className="font-serif text-xl text-[#3c4c30]">Blooms by Beth</span>
+                  <Flower className="h-6 w-6 text-sage" />
+                  <span className="font-serif text-xl text-sage-dark">Blooms by Beth</span>
                 </Link>
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)}>
                   <X className="h-6 w-6" />
@@ -61,7 +61,7 @@ export function Header() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-lg font-medium text-[#5a5a5a] transition-colors hover:text-[#738c65]"
+                    className="text-lg font-medium text-body transition-colors hover:text-sage"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}

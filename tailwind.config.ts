@@ -15,6 +15,15 @@ export default {
   			serif: ['var(--font-cormorant-garamond)', ...defaultTheme.fontFamily.serif]
   		},
   		colors: {
+  			// Brand palette. See design-system.md for usage rules.
+  			sage: {
+  				DEFAULT: '#738c65', // buttons, icons, accents
+  				dark: '#3c4c30',    // headings, footer background
+  				hover: '#5d7251',   // button hover
+  				pale: '#f0f4eb'     // alternate section backgrounds, icon fills
+  			},
+  			beige: '#f8f5f0',       // primary section backgrounds, card fills
+  			body: '#5a5a5a',        // paragraph and secondary text
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

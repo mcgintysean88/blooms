@@ -18,13 +18,13 @@ export default function Error({
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center p-4">
       <div className="text-center">
-        <h2 className="text-2xl font-medium text-[#3c4c30] mb-4">Something went wrong</h2>
-        <p className="text-[#5a5a5a] mb-6">
+        <h2 className="text-2xl font-medium text-sage-dark mb-4">Something went wrong</h2>
+        <p className="text-body mb-6">
           We apologize for the inconvenience. Please try again or contact us if the problem persists.
         </p>
         <Button
           onClick={reset}
-          className="bg-[#738c65] hover:bg-[#5a6e4d] text-white"
+          className="bg-sage hover:bg-sage-hover text-white"
         >
           Try again
         </Button>

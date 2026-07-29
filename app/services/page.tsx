@@ -16,7 +16,7 @@ export default function ServicesPage() {
       <Header />
       <main className="flex-1">
         {/* Services Overview */}
-        <section className="py-20 md:py-32 px-4 bg-[#3c4c30] text-white">
+        <section className="py-20 md:py-32 px-4 bg-sage-dark text-white">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-6xl font-serif font-light text-white mb-4">Our Services</h1>
@@ -61,11 +61,11 @@ export default function ServicesPage() {
         </section>
 
         {/* Process Section */}
-        <section className="py-16 md:py-24 px-4 bg-[#f8f5f0]">
+        <section className="py-16 md:py-24 px-4 bg-beige">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-serif text-[#3c4c30] mb-6">Our Process</h2>
-              <p className="text-lg text-[#5a5a5a] max-w-2xl mx-auto">
+              <h2 className="text-3xl font-serif text-sage-dark mb-6">Our Process</h2>
+              <p className="text-lg text-body max-w-2xl mx-auto">
                 We believe in a collaborative approach to garden design and maintenance.
               </p>
             </div>
@@ -73,36 +73,36 @@ export default function ServicesPage() {
             <div className="grid gap-8 md:grid-cols-3">
               <div className="bg-white p-6 rounded-md shadow-sm">
                 <div className="flex items-center mb-4 md:flex-row flex-col text-center md:text-left">
-                  <div className="w-12 h-12 bg-[#738c65] text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
+                  <div className="w-12 h-12 bg-sage text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
                     1
                   </div>
-                  <h3 className="text-xl font-serif text-[#3c4c30] text-center md:text-left">Consultation</h3>
+                  <h3 className="text-xl font-serif text-sage-dark text-center md:text-left">Consultation</h3>
                 </div>
-                <p className="text-[#5a5a5a] text-center md:text-left">
+                <p className="text-body text-center md:text-left">
                   We begin with a thorough consultation to understand your vision, needs, and the unique characteristics
                   of your space.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-md shadow-sm">
                 <div className="flex items-center mb-4 md:flex-row flex-col text-center md:text-left">
-                  <div className="w-12 h-12 bg-[#738c65] text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
+                  <div className="w-12 h-12 bg-sage text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
                     2
                   </div>
-                  <h3 className="text-xl font-serif text-[#3c4c30] text-center md:text-left">Design</h3>
+                  <h3 className="text-xl font-serif text-sage-dark text-center md:text-left">Design</h3>
                 </div>
-                <p className="text-[#5a5a5a] text-center md:text-left">
+                <p className="text-body text-center md:text-left">
                   Based on our consultation, we create a detailed design plan that includes plant selections, layout,
                   and special features.
                 </p>
               </div>
               <div className="bg-white p-6 rounded-md shadow-sm">
                 <div className="flex items-center mb-4 md:flex-row flex-col text-center md:text-left">
-                  <div className="w-12 h-12 bg-[#738c65] text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
+                  <div className="w-12 h-12 bg-sage text-white rounded-full flex items-center justify-center text-xl font-bold md:mr-4 mb-3 md:mb-0 mx-auto md:mx-0 flex-shrink-0">
                     3
                   </div>
-                  <h3 className="text-xl font-serif text-[#3c4c30] text-center md:text-left">Implementation</h3>
+                  <h3 className="text-xl font-serif text-sage-dark text-center md:text-left">Implementation</h3>
                 </div>
-                <p className="text-[#5a5a5a] text-center md:text-left">
+                <p className="text-body text-center md:text-left">
                   Our skilled team brings the design to life, handling everything from soil preparation to planting and
                   finishing touches.
                 </p>
@@ -111,7 +111,7 @@ export default function ServicesPage() {
 
             <div className="mt-16 text-center">
               <Link href="/contact">
-                <Button className="bg-[#738c65] hover:bg-[#5d7251] text-white">Schedule a Consultation</Button>
+                <Button className="bg-sage hover:bg-sage-hover text-white">Schedule a Consultation</Button>
               </Link>
             </div>
           </div>
