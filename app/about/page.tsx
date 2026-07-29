@@ -20,8 +20,8 @@ export default function AboutPage() {
         <section className="py-16 md:py-24 px-4">
           <div className="container mx-auto max-w-4xl">
             <h1 className="text-4xl md:text-5xl font-serif text-sage-dark mb-12 text-center">Meet Beth McGinty</h1>
-            <div className="grid gap-8 md:grid-cols-2 md:items-center">
-              <div className="relative w-full mx-auto md:mx-0 max-w-md md:max-w-none aspect-square">
+            <div className="grid gap-8 md:grid-cols-2 md:items-start">
+              <div className="relative w-full mx-auto md:mx-0 max-w-md md:max-w-none aspect-[4/5]">
                 <Image
                   src="/beth2.jpeg"
                   alt="Beth McGinty"
@@ -64,21 +64,21 @@ export default function AboutPage() {
               <h2 className="text-3xl font-serif text-sage-dark mb-6 text-center">Beth's Philosophies</h2>
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="bg-beige p-6 rounded-md">
-                  <h3 className="text-xl font-serif text-sage-dark mb-3 text-center">Southern Heritage</h3>
-                  <p className="text-body text-center">
+                  <h3 className="text-xl font-serif text-sage-dark mb-3">Southern Heritage</h3>
+                  <p className="text-body">
                     We honor the rich gardening traditions of the South, from heirloom plants to classic garden
                     structures.
                   </p>
                 </div>
                 <div className="bg-beige p-6 rounded-md">
-                  <h3 className="text-xl font-serif text-sage-dark mb-3 text-center">Sustainable Practices</h3>
-                  <p className="text-body text-center">
+                  <h3 className="text-xl font-serif text-sage-dark mb-3">Sustainable Practices</h3>
+                  <p className="text-body">
                     Our designs incorporate native plants, water conservation, and eco-friendly maintenance techniques.
                   </p>
                 </div>
                 <div className="bg-beige p-6 rounded-md">
-                  <h3 className="text-xl font-serif text-sage-dark mb-3 text-center">Personal Touch</h3>
-                  <p className="text-body text-center">
+                  <h3 className="text-xl font-serif text-sage-dark mb-3">Personal Touch</h3>
+                  <p className="text-body">
                     Every garden we create reflects the personality and lifestyle of its owner, creating a unique
                     outdoor space.
                   </p>

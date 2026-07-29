@@ -16,7 +16,7 @@ export default function ServicesPage() {
       <Header />
       <main className="flex-1">
         {/* Services Overview */}
-        <section className="py-20 md:py-32 px-4 bg-sage-dark text-white">
+        <section className="py-20 md:py-28 px-4 bg-sage-dark text-white">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-6xl font-serif font-light text-white mb-4">Our Services</h1>

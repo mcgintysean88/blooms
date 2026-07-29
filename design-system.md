@@ -17,7 +17,8 @@ A marketing and inquiry website for a Charleston-area garden design and landscap
 ## Color Palette
 
 All brand colors are defined as named tokens in `tailwind.config.ts`. **Use the token,
-never a raw hex.** Arbitrary values like `text-sage-dark` should not appear in components.
+never a raw hex.** Arbitrary values — `text-[#3c4c30]` and friends — should not appear
+in components. Use `text-sage-dark` instead.
 
 ### Brand Colors
 
@@ -49,14 +50,14 @@ must be kept in sync with `sage` by hand.
 
 ### Background Usage Rule
 
-- **Warm Beige (`#f8f5f0`)** — Use for primary section backgrounds and card fills (intro section, philosophy cards)
-- **Light Green (`#f0f4eb`)** — Use for alternate section backgrounds and icon container fills
+- **`beige`** — Use for primary section backgrounds and card fills (intro section, philosophy cards)
+- **`sage-pale`** — Use for alternate section backgrounds and icon container fills
 - These two should alternate to create visual rhythm between sections
 
 ### Hover State Rule
 
-- **Navigation links** → hover to Mid Sage (`#738c65`)
-- **Buttons** → hover to Hover Sage (`#5d7251`)
+- **Navigation links** → hover to `sage`
+- **Buttons** → hover to `sage-hover`
 - **Footer links** → hover to full white (`hover:text-white`)
 
 ---
@@ -90,11 +91,11 @@ history of that bug.
 
 | Usage | Size | Weight | Color |
 |-------|------|--------|-------|
-| Large body copy | `text-lg` + `leading-relaxed` | default | `#5a5a5a` |
-| Standard body | `text-base` | default | `#5a5a5a` |
-| Form labels | `text-sm` | `font-medium` | `#3c4c30` |
+| Large body copy | `text-lg` + `leading-relaxed` | default | `body` |
+| Standard body | `text-base` | default | `body` |
+| Form labels | `text-sm` | `font-medium` | `sage-dark` |
 | Error messages | `text-xs` | default | `red-500` (gap — needs brand color) |
-| Caption / meta | `text-sm` | default | `white/70` or `#5a5a5a` |
+| Caption / meta | `text-sm` | default | `white/70` or `body` |
 | Character counter | `text-xs` | default | `body` |
 
 ### Nav Link
@@ -119,10 +120,16 @@ max-w-6xl   — services grid
 
 ### Section Padding
 
-```
-py-16 md:py-24   — primary content sections
-py-12 md:py-16   — secondary/compact sections
-```
+Three tiers, and only these three. Pick by the section's role, not by feel.
+
+| Tier | Classes | Use for |
+|------|---------|---------|
+| **Band** | `py-20 md:py-28` | Full-width page-opening bands (Services dark header, Portfolio top) |
+| **Primary** | `py-16 md:py-24` | Main content sections (About, Terms, Privacy, home intro, Services process) |
+| **Compact** | `py-12 md:py-16` | Secondary sections (home services grid, home newsletter) |
+
+The Band tier was previously an undocumented `py-20 md:py-32`, which left visible
+dead space above the Services heading. Trimmed to `md:py-28` and documented here.
 
 ### Card / Component Internal Padding
 
@@ -213,10 +220,15 @@ placeholder option is muted via `invalid:text-muted-foreground`.
 ```
 Card (border-none, shadow-sm, hover:shadow-md, transition-shadow)
 └── CardContent (p-6)
-    ├── Icon (h-10 w-10 text-sage, centered)
-    ├── H3 (text-xl font-serif text-sage-dark, centered)
+    ├── Icon (h-10 w-10 text-sage)
+    ├── H3 (text-xl font-serif text-sage-dark)
     └── p (text-body)
 ```
+
+**Alignment rule:** cards are left-aligned throughout — icon, title and body.
+Mixing a centered icon/title with left-aligned body copy (the previous state) reads
+as a mistake, and centered body copy is harder to scan. Philosophy cards on the
+About page follow the same rule.
 
 Available icons: `FlowerIcon`, `Calendar`, `Palette`, `Scissors`, `Sprout`, `Shovel`
 
@@ -226,8 +238,8 @@ Available icons: `FlowerIcon`, `Calendar`, `Palette`, `Scissors`, `Sprout`, `Sho
 
 ```
 div (bg-beige p-6 rounded-md)
-├── H3 (text-xl font-serif text-sage-dark mb-3 text-center)
-└── p (text-body text-center)
+├── H3 (text-xl font-serif text-sage-dark mb-3)
+└── p (text-body)
 ```
 
 Note: This is structurally similar to ServiceCard but implemented inline — candidate for extraction into a shared component.

@@ -148,20 +148,34 @@ The About page runs five dense paragraphs with default leading and no `max-w` on
 
 ### 🟡 Layout
 
-#### L-1 ⬜ About page two-column layout is imbalanced
-The portrait floats near the bottom of its column with a large empty gap above it, while the text column runs far past the image bottom.
+#### L-1 ✅ About page two-column layout imbalanced — **done 2026-07-29**
+The portrait floated near the middle of its column with a large empty gap above and below, while the text column ran far past it. Cause: `md:items-center` vertically centred a 432px `aspect-square` image against a 640px text column, splitting the 208px difference above and below.
 
-**Fix:** Top-align or make the image sticky, or restructure to single-column with the portrait as a full-width band.
+**Fixed** with two changes: `md:items-center` → `md:items-start`, and `aspect-square` → `aspect-[4/5]` (matching the home page's portrait treatment). The taller crop does most of the work — the image is now 540px against 640px of text, so the height difference dropped from 208px to 100px.
 
-#### L-2 ⬜ Service cards mix text alignment
-Within a single card: icon centered, title centered, body text left-aligned.
+Verified: image and text tops align exactly (both at 257px), and the crop still frames Beth well.
 
-**Fix:** Pick one. Recommend all-left — centered body copy is harder to read.
+**A sticky image was tried and deliberately abandoned.** `md:sticky md:top-24` did not pin, and the reason is structural rather than a missing `overflow` fix: the sticky element *was* the grid item, so under `items-start` it shrink-wrapped to its own content height and had almost no travel inside its containing block. Making it work needs an extra full-height wrapper around the sticky div. Given the `aspect-[4/5]` change had already reduced the gap to 100px, sticky would have bought ~100px of travel for real added markup complexity — not worth it. Noted here so the next person doesn't rediscover it.
 
-#### L-3 ⬜ Section padding is inconsistent
-`py-16 md:py-24` on some sections, `py-20 md:py-32` on others, with no documented rule. The dark-green Services header in particular carries excessive dead space above its title.
+#### L-2 ✅ Service cards mixed text alignment — **done 2026-07-29**
+Within a single card: icon centred, title centred, body text left-aligned — which reads as a mistake rather than a choice.
 
-**Fix:** Define two or three standard section-padding tiers and apply consistently.
+**Fixed:** `ServiceCard` is now all-left (icon, title, body). Verified the icon sits at the card's 24px `p-6` inset rather than centred, and both title and body compute to `text-align: start`.
+
+**Also aligned the About page philosophy cards.** Those were internally consistent (centred title *and* centred body), but leaving them would have traded the in-card inconsistency for a cross-page one — service cards left, philosophy cards centred. Both card types are now left-aligned, and the rule is written into `design-system.md`. This also moves C-2 (shared `FeatureCard`) closer, since the two patterns now differ only in wrapper styling.
+
+#### L-3 ✅ Section padding inconsistent — **done 2026-07-29**
+An audit of every `<section>` found three tiers in use, only two of them documented:
+
+| Padding | Used by | Was documented? |
+|---|---|---|
+| `py-16 md:py-24` | privacy, terms, about, home intro, services process | yes — "primary" |
+| `py-12 md:py-16` | home services, home newsletter | yes — "compact" |
+| `py-20 md:py-32` | services dark header, portfolio top | **no** |
+
+The undocumented tier is a legitimate role — full-width page-opening bands — but it was oversized, which is what produced the dead space above the Services heading.
+
+**Fixed:** formalised as a three-tier scale in `design-system.md` (**Band** `py-20 md:py-28` / **Primary** `py-16 md:py-24` / **Compact** `py-12 md:py-16`), and the two Band sections trimmed from `md:py-32` to `md:py-28`. Verified the Services band now computes to 112px top and bottom, down from 128px.
 
 ---
 
@@ -209,7 +223,8 @@ Philosophy cards (About) and `ServiceCard` are visually near-identical but separ
 | ~~3~~ | ~~**N-1, N-4, N-5** header fixes~~ | ✅ **Done** |
 | ~~4~~ | ~~**N-2, N-3** drawer bug + a11y~~ | ✅ **Done** |
 | ~~5~~ | ~~**FM-1, FM-2, FM-3** form polish~~ | ✅ **Done** |
-| 6 | **L-1, L-2, L-3, T-1, T-2, T-3** | Layout and type refinement — **next up** |
+| 6a | ~~**L-1, L-2, L-3** layout~~ | ✅ **Done** |
+| 6b | **T-1, T-2, T-3** type refinement | **next up** |
 | 7 | **C-1, C-2** | Housekeeping |
 
 Still open on the form: **FM-4** (error red clashes with the palette).

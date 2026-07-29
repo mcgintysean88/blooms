@@ -15,7 +15,7 @@ export default function PortfolioPage() {
       <Header />
       <main className="flex-1">
         {/* Portfolio Gallery */}
-        <section className="py-20 md:py-32 px-4">
+        <section className="py-20 md:py-28 px-4">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h1 className="text-4xl md:text-6xl font-serif font-light text-sage-dark mb-4">Our Portfolio</h1>
