@@ -4,8 +4,8 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Flower, Menu, X } from "lucide-react"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Flower, Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -57,16 +57,16 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetTitle className="sr-only">Navigation menu</SheetTitle>
             <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between mb-8">
-                <Link href="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
-                  <Flower className="h-6 w-6 text-sage" />
-                  <span className="font-serif text-xl text-sage-dark">Blooms by Beth</span>
-                </Link>
-                <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)}>
-                  <X className="h-6 w-6" />
-                </Button>
-              </div>
+              <Link
+                href="/"
+                className="flex items-center gap-2 mb-8"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Flower className="h-6 w-6 text-sage" />
+                <span className="font-serif text-xl text-sage-dark">Blooms by Beth</span>
+              </Link>
               <nav className="flex flex-col gap-6">
                 {navItems.map((item) => (
                   <Link

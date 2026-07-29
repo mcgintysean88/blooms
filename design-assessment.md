@@ -65,14 +65,14 @@ Two anomalies were found and resolved during the sweep:
 
 **Remaining exception:** `app/layout.tsx:19` sets `themeColor: '#738c65'` in the `Viewport` export. It is a plain metadata string, not a class, so it cannot take a token and must be hand-synced with `sage`.
 
-#### N-1 ⬜ Logo is force-centered by a CSS hack
+#### N-1 ✅ Logo force-centered by a CSS hack — **done 2026-07-29**
 `app/globals.css` contains:
 ```css
 .header-logo { margin-left: auto; margin-right: auto; }
 ```
 Computes to a ~165px left margin at desktop, pushing the logo to center while nav sits right — leaving the entire left third of the header empty and unbalanced.
 
-**Fix:** Delete those two lines. Standard is logo-left / nav-right.
+**Fixed:** Rule deleted from `globals.css` and the now-dead `header-logo` class removed from the markup. The flex container's existing `justify-between` produces logo-left / nav-right on desktop and logo-left / hamburger-right on mobile. Verified: logo left edge now sits at the container's 16px padding, down from ~165px.
 
 #### FM-1 ⬜ Select inputs don't match text inputs
 `components/contact-form.tsx` uses native `<select>` styled inline (`border-gray-300 rounded-md p-2 h-10`) sitting directly beside shadcn `<Input>` components. Different border color, height, and text weight — visibly mismatched within the same form.
@@ -83,33 +83,37 @@ Computes to a ~165px left margin at desktop, pushing the logo to center while na
 
 ### 🟠 Bugs & accessibility
 
-#### N-2 ⬜ Duplicate close button in mobile drawer
-`components/header.tsx:55` renders a manual `<X>` button, but shadcn's `SheetContent` already ships its own close control. Two X's visibly stack in the drawer's top-right corner.
+#### N-2 ✅ Duplicate close button in mobile drawer — **done 2026-07-29**
+`components/header.tsx` rendered a manual `<X>` button, but `SheetContent` already ships its own close control at `components/ui/sheet.tsx:67` (`absolute right-4 top-4`). Two X's visibly stacked in the drawer's top-right corner.
 
-**Fix:** Delete the manual button.
+**Fixed:** Manual button and its now-unused `X` import removed. The surrounding `flex justify-between` wrapper was redundant once the button was gone, so the logo `Link` absorbed its `mb-8` directly. Verified: the open drawer now contains exactly **1** button (the built-in "Close"), down from 2.
 
-#### N-3 ⬜ Mobile menu missing accessible title
-Console error on every mobile menu open:
+#### N-3 ✅ Mobile menu missing accessible title — **done 2026-07-29**
+Radix logged an error on every mobile menu open:
 ```
 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 ```
-Screen readers cannot announce the navigation drawer.
+Screen readers could not announce the navigation drawer.
 
-**Fix:** Add a `SheetTitle` wrapped in Radix `VisuallyHidden`.
+**Fixed:** Added `<SheetTitle className="sr-only">Navigation menu</SheetTitle>` inside `SheetContent`. Tailwind's `sr-only` is used rather than pulling in `@radix-ui/react-visually-hidden` — same result, no new dependency.
+
+Verified: the drawer renders an `<h2>` "Navigation menu" that is screen-reader-only (`position: absolute`, `width: 1px`), the dialog's `aria-labelledby` resolves to it, and opening the drawer no longer emits a new console error.
 
 ---
 
 ### 🟡 Navigation
 
-#### N-4 ⬜ Nav font size is off-scale and oversized
-Desktop uses `text-[1.25rem]` (20px) — an arbitrary one-off — while mobile uses `text-lg` (18px). 20px is large for nav and crowds the header.
+#### N-4 ✅ Nav font size off-scale and oversized — **done 2026-07-29**
+Desktop used `text-[1.25rem]` (20px) — an arbitrary one-off — while the mobile drawer used `text-lg` (18px).
 
-**Fix:** Unify to `text-base` (16px), optionally with slightly wider letter-spacing.
+**Fixed:** Both are now `text-base` (16px), on the standard scale and consistent with each other. Desktop nav gap went `gap-4` → `gap-6` so the links don't tighten up at the smaller size. Letter-spacing was left alone; it remains available if the nav wants more air.
 
-#### N-5 ⬜ No active-page indicator
-Nothing indicates which page the visitor is currently on.
+#### N-5 ✅ No active-page indicator — **done 2026-07-29**
+Nothing indicated which page the visitor was on.
 
-**Fix:** Use `usePathname()` to apply an underline or sage color to the current route.
+**Fixed:** The current route's link renders in `sage-dark` with a `sage` underline (`underline-offset-8`) and carries `aria-current="page"`. Inactive links keep the `body` / `hover:sage` treatment. Uses `usePathname()` with a helper that also matches nested routes (`pathname.startsWith(href + '/')`), so future subpages will light up their parent nav item. Applied to both the desktop nav and the mobile drawer.
+
+`navItems` also moved to module scope, since it never depended on render state.
 
 ---
 
@@ -182,8 +186,8 @@ Philosophy cards (About) and `ServiceCard` are visually near-identical but separ
 |---|---|---|
 | ~~1~~ | ~~Font pipeline~~ | ✅ **Done** — transformative |
 | ~~2~~ | ~~**F-1** brand color tokens~~ | ✅ **Done** — foundation for everything below |
-| 3 | **N-1, N-4, N-5** header fixes | High visibility, low risk — **next up** |
-| 4 | **N-2, N-3** drawer bug + a11y | Straight bug fixes |
+| ~~3~~ | ~~**N-1, N-4, N-5** header fixes~~ | ✅ **Done** |
+| ~~4~~ | ~~**N-2, N-3** drawer bug + a11y~~ | ✅ **Done** |
 | 5 | **FM-1, FM-2, FM-3** form polish | Highest-converting page on the site |
 | 6 | **L-1, L-2, L-3, T-1, T-2, T-3** | Layout and type refinement |
 | 7 | **C-1, C-2** | Housekeeping |
