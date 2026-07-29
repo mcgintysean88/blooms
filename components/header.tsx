@@ -2,23 +2,28 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Flower, Menu, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+
+const navItems = [
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/contact" },
+]
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
 
-  const navItems = [
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Contact", href: "/contact" },
-  ]
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-2 header-logo">
+        <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <Flower className="h-6 w-6 text-sage" />
             <span className="font-serif text-xl text-sage-dark">Blooms by Beth</span>
@@ -26,12 +31,18 @@ export function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="text-[1.25rem] font-medium text-body transition-colors hover:text-sage"
+              aria-current={isActive(item.href) ? "page" : undefined}
+              className={cn(
+                "text-base font-medium transition-colors",
+                isActive(item.href)
+                  ? "text-sage-dark underline decoration-sage decoration-2 underline-offset-8"
+                  : "text-body hover:text-sage",
+              )}
             >
               {item.label}
             </Link>
@@ -61,7 +72,13 @@ export function Header() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-lg font-medium text-body transition-colors hover:text-sage"
+                    aria-current={isActive(item.href) ? "page" : undefined}
+                    className={cn(
+                      "text-base font-medium transition-colors",
+                      isActive(item.href)
+                        ? "text-sage-dark underline decoration-sage decoration-2 underline-offset-8"
+                        : "text-body hover:text-sage",
+                    )}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.label}

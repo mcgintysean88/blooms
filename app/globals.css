@@ -119,9 +119,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* Custom styles */
-.header-logo {
-  margin-left: auto;
-  margin-right: auto;
-}
