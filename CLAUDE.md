@@ -7,9 +7,13 @@ A Next.js 15 marketing and inquiry website for Blooms by Beth, a Charleston-area
 ```bash
 npm run dev      # Start dev server (Turbopack, localhost:3000)
 npm run build    # Production build
-npm run lint     # ESLint check
+npm run lint     # ESLint check (see Conventions — disabled during build)
 npm run db:setup # Initialize database tables (Neon)
 ```
+
+`.claude/launch.json` starts the same dev server on **port 3100** for preview tooling, to
+avoid colliding with anything already on 3000. Don't run `npm run build` while a dev server
+is live — it overwrites `.next` and the dev server then throws `ENOENT` on its manifests.
 
 ## Tech Stack
 
@@ -28,26 +32,32 @@ npm run db:setup # Initialize database tables (Neon)
 
 ```
 app/
-  layout.tsx          # Root layout — metadata, fonts, Header/Footer
-  page.tsx            # Home: hero, services overview, testimonials, newsletter
-  about/page.tsx      # Beth's bio and philosophy
+  layout.tsx          # Root layout — metadata, fonts, viewport themeColor
+  page.tsx            # Home: hero, intro, services overview, newsletter
+  about/page.tsx      # Beth's bio and philosophy cards
   services/page.tsx   # Service offerings with process steps
   contact/page.tsx    # Contact form (renders <ContactForm />)
-  portfolio/page.tsx  # Project gallery
+  portfolio/page.tsx  # Project gallery — NOT linked in nav (see BLO-28)
   privacy-policy/     # Legal
   terms/              # Legal
+  error.tsx           # Error boundary
+  loading.tsx         # Loading state
+  globals.css         # Tailwind layers + shadcn CSS variables (--ring is sage)
   actions.ts          # Server actions: submitContactForm, subscribeToNewsletter
   sitemap.ts          # Auto-generated XML sitemap
 
 components/
-  ui/                 # shadcn/ui base components (button, card, input, etc.)
-  header.tsx          # Sticky nav with mobile Sheet drawer
+  ui/                 # button, card, input, select, separator, sheet, textarea
+  header.tsx          # Sticky nav, active-route indicator, mobile Sheet drawer
   footer.tsx          # Footer with nav links and social icons
-  contact-form.tsx    # Client component — 13-field inquiry form
+  contact-form.tsx    # Client component — 13 fields in 3 fieldsets
   newsletter-signup.tsx  # Client component — email capture
-  service-card.tsx    # Icon + title + description display
-  testimonial-card.tsx   # Quote card
+  service-card.tsx    # Icon + title + description display (left-aligned)
+  testimonial-card.tsx   # Quote card — BUILT BUT NEVER RENDERED (see BLO-33)
   social-links.tsx    # Social media icon links
+
+design-system.md      # The intended design system — read before visual changes
+design-assessment.md  # Audit findings, what shipped, what remains
 
 lib/
   db.ts               # Neon SQL client singleton
@@ -91,18 +101,54 @@ Fields: `id`, `email` (unique), `created_at`
 
 ## Design System
 
-Colors are hardcoded Tailwind hex values throughout components — no CSS variable aliases:
+Full reference: **[`design-system.md`](./design-system.md)** (the intended system) and
+**[`design-assessment.md`](./design-assessment.md)** (audit findings, what was fixed, what
+remains). Read those before making visual changes.
+
+### Colors — use tokens, never raw hex
+
+Defined in `tailwind.config.ts`. Arbitrary values like `text-[#3c4c30]` should not appear
+in components.
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| Dark sage | `#3c4c30` | Headings, dark text |
-| Mid sage | `#738c65` | Buttons, accents, icons |
-| Hover sage | `#5d7251` | Button hover states |
-| Body text | `#5a5a5a` | Paragraph text |
-| Warm beige | `#f8f5f0` | Section backgrounds |
-| Light green | `#f0f4eb` | Alternate backgrounds |
+| `sage-dark` | `#3c4c30` | Headings, footer background, logo wordmark |
+| `sage` | `#738c65` | Buttons, accents, icons |
+| `sage-hover` | `#5d7251` | Button hover states |
+| `body` | `#5a5a5a` | Paragraph text |
+| `beige` | `#f8f5f0` | Section backgrounds, card fills |
+| `sage-pale` | `#f0f4eb` | Alternate backgrounds, icon fills |
 
-Typography: serif font (Playfair Display / Geist Serif) for headings, sans-serif for body.
+Usage: `text-sage-dark`, `bg-sage`, `hover:bg-sage-hover`, `text-body`, `bg-beige`.
+Opacity modifiers work normally (`text-sage/30`).
+
+One exception: `app/layout.tsx` sets `themeColor: '#738c65'` in its `Viewport` export.
+That is a metadata string, not a class, so it stays a literal and must be hand-synced.
+
+### Typography
+
+**Cormorant Garamond** (weights 300–700) for headings via `font-serif`; **Geist Sans**
+for body via `font-sans`. Both load through `next/font/google` in `app/layout.tsx` **and
+must be mapped to Tailwind's `serif`/`sans` keys in `tailwind.config.ts`** — without that
+mapping the CSS variables are defined but never consumed and both fonts silently fall
+back to system defaults. That exact bug shipped undetected for months; see
+`design-assessment.md`.
+
+### Section padding — three tiers only
+
+| Tier | Classes | Use for |
+|------|---------|---------|
+| Band | `py-20 md:py-28` | Page-opening bands (Services header, Portfolio top) |
+| Primary | `py-16 md:py-24` | Main content sections |
+| Compact | `py-12 md:py-16` | Secondary sections |
+
+### Other conventions
+
+- **Cards are left-aligned** — icon, title and body. No centered card text.
+- **Focus rings** come from `--ring` in `globals.css`, set to sage. Every shadcn control
+  inherits it via `ring-ring`; don't override per-component.
+- **Nav** is `text-base` everywhere; the active route gets `sage-dark` + a sage underline
+  and `aria-current="page"`.
 
 ## Conventions
 
@@ -112,6 +158,14 @@ Typography: serif font (Playfair Display / Geist Serif) for headings, sans-serif
 - **Zod schemas** live in `app/actions.ts` alongside the actions that use them.
 - **shadcn/ui** components go in `components/ui/`; custom components go in `components/`.
 - **Path alias:** `@/` maps to the project root.
+- **`components/ui/select.tsx` is a native `<select>`, not Radix.** Deliberate: these fields
+  submit through `FormData` on the lead-capture path, and native selects give phones their
+  own picker. Don't swap it for `@radix-ui/react-select` without weighing that.
+- **The contact form is the business's only lead path.** If you change it, verify every
+  `name` attribute still matches what `app/actions.ts` reads from `FormData`. Don't submit
+  a test lead to verify — it writes a row and emails Beth.
+- **ESLint is disabled during build** (`next.config.ts`). `npm run lint` reports numerous
+  pre-existing `react/no-unescaped-entities` errors; they don't block deploys.
 
 ## External Services
 

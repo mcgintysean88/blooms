@@ -1,8 +1,45 @@
 # Blooms by Beth — Design Assessment
 
-**Date:** 2026-07-28
+**Audited:** 2026-07-28 · **Last updated:** 2026-07-29
 **Scope:** Full-site design review — every page at desktop (1280×800) and mobile (375×812), verified against computed styles in-browser and against source.
 **Companion doc:** [`design-system.md`](./design-system.md) documents the *intended* system. This doc records what was actually found, what was fixed, and what remains.
+
+---
+
+## Where this stands
+
+**13 of 19 findings shipped to production.** Six remain, all lower-severity. The foundational
+work is done — fonts render, colours are tokenised, the header and contact form are sound —
+so the remaining items are refinements that can be picked up in any order.
+
+| Shipped | Remaining |
+|---|---|
+| Font pipeline (root cause: missing Tailwind `fontFamily` map) | **T-1** hero cramped on mobile |
+| **F-1** brand colour tokens (174 usages) | **T-2** heading scale cliff |
+| **N-1** logo centering hack | **T-3** no measure/leading control |
+| **N-2** duplicate drawer close button | **FM-4** error red clashes |
+| **N-3** drawer accessible title | **C-1** dead shadcn theme layer |
+| **N-4** nav font size | **C-2** duplicated card patterns |
+| **N-5** active-page indicator | |
+| **FM-1** select/input mismatch | |
+| **FM-2** 13-field wall → 3 fieldsets | |
+| **FM-3** sage focus ring | |
+| **L-1/L-2/L-3** layout + padding scale | |
+
+Two items were also closed in `design-system.md`'s own gap list along the way: the character
+counter now uses the `body` token, and the palette is tokenised.
+
+### Start here next
+**T-2 is the most consequential remaining item**, and it got worse rather than better during
+this work: switching to Cormorant Garamond (smaller x-height than Playfair) means `text-xl`
+card titles now read undersized against body copy. A formal type scale would resolve T-1,
+T-2 and T-3 together.
+
+### Verification approach used throughout
+Findings and fixes were confirmed by reading **computed styles and generated CSS rules in
+the browser**, not by eye — because several of these bugs (the font fallback especially)
+are invisible to visual inspection. Where a fix claimed parity, the before/after numbers
+are recorded in the item.
 
 ---
 

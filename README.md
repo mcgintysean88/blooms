@@ -13,7 +13,7 @@ A professional website for Blooms by Beth, a garden design and planting service 
 | `/` | Home — hero image, intro, services overview, newsletter signup |
 | `/about` | About Beth — biography, philosophies, community involvement |
 | `/services` | Services — detailed service descriptions, what we don't do, 3-step process |
-| `/portfolio` | Portfolio — project gallery with photos and descriptions |
+| `/portfolio` | Portfolio — project gallery. **Not linked from nav or footer** — reachable only by direct URL until a fuller portfolio exists |
 | `/contact` | Contact — detailed inquiry form |
 | `/privacy-policy` | Privacy policy |
 | `/terms` | Terms of service |
@@ -117,9 +117,11 @@ git push origin v4:main --force
 ```
 /app              — Pages and server actions (Next.js App Router)
 /components       — Reusable React components
-/components/ui    — shadcn/ui base components
+/components/ui    — shadcn/ui base components (select.tsx is native, not Radix)
 /public           — Static assets (images, favicon, robots.txt)
 /lib              — Utility functions
+/scripts          — One-off maintenance scripts (DB setup)
+/types            — Shared TypeScript types
 ```
 
 ---
@@ -133,5 +135,8 @@ git push origin v4:main --force
 | `components/newsletter-signup.tsx` | Newsletter signup UI component |
 | `app/sitemap.ts` | Auto-generated XML sitemap for SEO |
 | `public/robots.txt` | Search engine crawl rules |
-| `create-tables.mjs` | One-time script to set up the Neon database schema |
+| `scripts/create-tables.mjs` | One-time script to set up the Neon database schema (`npm run db:setup`) |
+| `tailwind.config.ts` | Brand colour tokens and the font family mapping — both required |
+| `design-system.md` | The design system — colours, type, spacing, component rules |
+| `design-assessment.md` | Design audit: what was found, what shipped, what remains |
 | `next.config.ts` | Next.js configuration (image optimization, ESLint settings) |
