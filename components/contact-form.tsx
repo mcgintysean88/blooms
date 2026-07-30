@@ -6,15 +6,12 @@ import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { submitContactForm } from "@/app/actions"
-
-type ErrorDetails = {
-  [key: string]: string[];
-};
+import type { ContactFormData, ContactFormFieldErrors } from "@/types"
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState("")
-  const [validationErrors, setValidationErrors] = useState<ErrorDetails>({})
+  const [validationErrors, setValidationErrors] = useState<ContactFormFieldErrors>({})
   const [messageText, setMessageText] = useState("")
   const maxCharacters = 1000
 
@@ -28,51 +25,38 @@ export function ContactForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
+    setStatus("loading")
+    setErrorMessage("")
+    setValidationErrors({})
+
+    // Captured before the await — currentTarget is cleared once the event settles.
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
     try {
-      setStatus("loading")
-      setErrorMessage("")
-      setValidationErrors({})
+      const response = await submitContactForm(formData)
 
-      // Get form data
-      const form = e.currentTarget
-      const formData = new FormData(form)
-
-      try {
-        // Submit the form data
-        const response = await submitContactForm(formData)
-
-        // Check the response
-        if (response && response.success) {
-          // Success response
-          setStatus("success")
-          form.reset()
-          setMessageText("")
-          console.log("Form submitted successfully")
-        } else {
-          // Error response
-          console.error("Form submission error - unexpected response:", response)
-          setStatus("error")
-          setErrorMessage("Something went wrong. Please try again.")
-        }
-      } catch (submitError) {
-        console.error("Form submission error:", submitError)
-        setStatus("error")
-        setErrorMessage("Failed to submit your message. Please try again.")
+      if (response.success) {
+        setStatus("success")
+        form.reset()
+        setMessageText("")
+        return
       }
-    } catch (error) {
-      console.error("Error in form handler:", error)
+
       setStatus("error")
-      setErrorMessage("An error occurred. Please try again.")
+      setErrorMessage(response.error)
+      setValidationErrors(response.fieldErrors ?? {})
+    } catch (error) {
+      // Only reached if the action itself fails to run (network, deploy skew).
+      console.error("Form submission error:", error)
+      setStatus("error")
+      setErrorMessage("Failed to submit your message. Please try again.")
     }
   }
 
   // Helper function to get field error message
-  const getFieldError = (fieldName: string) => {
-    if (validationErrors[fieldName] && validationErrors[fieldName].length > 0) {
-      return validationErrors[fieldName][0];
-    }
-    return null;
-  }
+  const getFieldError = (fieldName: keyof ContactFormData) =>
+    validationErrors[fieldName]?.[0] ?? null
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">

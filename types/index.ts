@@ -14,6 +14,13 @@ export interface ContactFormData {
   message: string
 }
 
+/** Per-field Zod messages, keyed by form field name. */
+export type ContactFormFieldErrors = Partial<Record<keyof ContactFormData, string[]>>
+
+export type ContactFormResult =
+  | { success: true }
+  | { success: false; error: string; fieldErrors?: ContactFormFieldErrors }
+
 export interface ServiceItem {
   title: string
   description: string

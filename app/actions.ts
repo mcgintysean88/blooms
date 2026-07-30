@@ -4,6 +4,7 @@ import { z } from "zod"
 import { revalidatePath } from "next/cache"
 import { sql } from "@/lib/db"
 import { sendContactNotification } from "@/lib/email"
+import type { ContactFormResult } from "@/types"
 
 const contactSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -43,7 +44,7 @@ export async function subscribeToNewsletter(formData: FormData) {
   }
 }
 
-export async function submitContactForm(formData: FormData) {
+export async function submitContactForm(formData: FormData): Promise<ContactFormResult> {
   const validationResult = contactSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -61,9 +62,11 @@ export async function submitContactForm(formData: FormData) {
   })
 
   if (!validationResult.success) {
-    const errors = validationResult.error.flatten().fieldErrors
-    console.error("Validation errors:", errors)
-    throw new Error("Validation failed")
+    return {
+      success: false,
+      error: "Please correct the highlighted fields and try again.",
+      fieldErrors: validationResult.error.flatten().fieldErrors,
+    }
   }
 
   const data = validationResult.data
@@ -88,7 +91,10 @@ export async function submitContactForm(formData: FormData) {
     revalidatePath("/contact")
     return { success: true }
   } catch (error) {
-    console.error("Database error:", error)
-    throw new Error("Failed to save message to database")
+    console.error("Contact form submission error:", error)
+    return {
+      success: false,
+      error: "We couldn't send your message. Please try again, or email us directly.",
+    }
   }
 }
