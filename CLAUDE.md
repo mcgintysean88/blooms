@@ -176,4 +176,34 @@ back to system defaults. That exact bug shipped undetected for months; see
 | Resend | Transactional email | resend.com |
 | GitHub | Source control | github.com |
 
-`main` branch auto-deploys to production on Vercel.
+### Which Vercel project is production
+
+**`bloomsbybethchs.com` is served by the Vercel project `blooms-1hgv`**
+(`prj_CRMIA5IKHqMlYadPWZPQYKPf3uKC`). Nothing in the project name suggests it, and the repo
+directory is named `blooms-by-beth-v4`, so verify before acting on any production question.
+
+Several Vercel projects have historically been connected to this same GitHub repo
+(`mcgintysean88/blooms`, branch `main`) from repeated imports and v0 exports; while
+connected, a single push deploys all of them. Only `blooms-1hgv` holds the custom domain and
+a full set of environment variables. Any such duplicate serves a public, indexable copy of
+the site, and one lacking `DATABASE_URL` returns a 500 on *every* contact-form submission:
+`lib/db.ts` calls `neon(process.env.DATABASE_URL!)` at module scope, and `neon()` throws at
+construction when the string is missing. That throw is upstream of the try/catch in
+`submitContactForm`, so no amount of error handling inside the action can absorb it — the
+non-null assertion on `DATABASE_URL!` is the only thing hiding it at compile time.
+
+The practical consequence: **Vercel CLI and MCP calls default to whatever
+`.vercel/project.json` is linked to, which is not necessarily production.** A link pointed at
+the wrong project makes `vercel env ls` report "No Environment Variables found" — true of
+that project, and badly misleading about the live site. Confirm the link, or target the
+project explicitly:
+
+```bash
+VERCEL_ORG_ID=team_ieVWn8P18PB9P3qypxH533LI VERCEL_PROJECT_ID=prj_CRMIA5IKHqMlYadPWZPQYKPf3uKC vercel env ls
+```
+
+`main` auto-deploys to production on Vercel, so a push to `main` updates the live site.
+
+When diagnosing a production error, reach for Vercel's aggregated **runtime errors** rather
+than runtime logs — log retention is roughly 1h on Hobby and 1 day on Pro, so the failure is
+usually already gone by the time you look, while the error table retains about 7 days.
