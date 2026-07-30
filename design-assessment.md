@@ -8,9 +8,16 @@
 
 ## Where this stands
 
-**13 of 19 findings shipped to production.** Six remain, all lower-severity. The foundational
-work is done — fonts render, colours are tokenised, the header and contact form are sound —
-so the remaining items are refinements that can be picked up in any order.
+**14 of 21 findings shipped to production.** Seven remain, all lower-severity. The foundational
+work is done — fonts render, colours are tokenised, the header and form layout are sound — so
+the remaining items are refinements that can be picked up in any order.
+
+> **Correction (2026-07-29).** This summary previously said the contact form was "sound." It
+> was not. Hours later the live form was found returning **HTTP 500** on any message under 10
+> characters, and the per-field error rendering this audit had reviewed as working was dead
+> code that could never fire. Both are fixed — see **FM-5**. A visual audit verified against
+> computed styles will not catch either; neither is visible without submitting invalid input
+> and reading the server's response.
 
 | Shipped | Remaining |
 |---|---|
@@ -18,12 +25,13 @@ so the remaining items are refinements that can be picked up in any order.
 | **F-1** brand colour tokens (174 usages) | **T-2** heading scale cliff |
 | **N-1** logo centering hack | **T-3** no measure/leading control |
 | **N-2** duplicate drawer close button | **FM-4** error red clashes |
-| **N-3** drawer accessible title | **C-1** dead shadcn theme layer |
-| **N-4** nav font size | **C-2** duplicated card patterns |
-| **N-5** active-page indicator | |
+| **N-3** drawer accessible title | **FM-6** errors not tied to their inputs (a11y) |
+| **N-4** nav font size | **C-1** dead shadcn theme layer |
+| **N-5** active-page indicator | **C-2** duplicated card patterns |
 | **FM-1** select/input mismatch | |
 | **FM-2** 13-field wall → 3 fieldsets | |
 | **FM-3** sage focus ring | |
+| **FM-5** form 500 + dead error rendering | |
 | **L-1/L-2/L-3** layout + padding scale | |
 
 Two items were also closed in `design-system.md`'s own gap list along the way: the character
@@ -239,6 +247,27 @@ Verified: `hsl(var(--ring))` computes to `rgb(115, 140, 101)` = `#738c65`.
 #### FM-4 ⬜ Error red clashes with the palette
 Generic `red-500` sits harshly against the muted sage system. A warmer, desaturated red would integrate better.
 
+Worth more than it was when first logged: until FM-5 these error messages **never rendered**, so the clash was theoretical. They now appear on any invalid submission, making this the most visible remaining palette inconsistency on the lead-capture path.
+
+#### FM-5 ✅ Form returned 500 on invalid input; per-field errors were dead code — **done 2026-07-29**
+Two defects with one root cause. `submitContactForm` computed Zod's `flatten().fieldErrors`, logged them server-side, then discarded them and did `throw new Error("Validation failed")`.
+
+A throw inside a server action reaches the browser as an HTTP 500 and an opaque "An unexpected response was received from the server." So:
+
+1. **The live site 500'd on ordinary typos.** Production error logs for `blooms-1hgv` recorded it twice on 2026-07-29 (`22:12:40Z`, `22:16:20Z`) — `message` under 10 characters. A user writing a short note got a server error, not a correction.
+2. **The per-field error UI could never fire.** `contact-form.tsx` declared `validationErrors` and `getFieldError`, and all 13 fields rendered a conditional message and `border-red-500`. But the state was only ever *cleared*, never populated, because the detail never crossed the server boundary. This audit reviewed that markup as functional; it was unreachable.
+
+**Fixed:** both the validation and database paths now return `ContactFormResult` — a discriminated union in `types/index.ts` keyed off `ContactFormData`, so error keys cannot drift from field names. `getFieldError` is typed `keyof ContactFormData`, so a typo'd field name is now a build error rather than a message that silently never shows.
+
+Verified against the exact production input: 8 field errors render with correct messages and rings, no row written, HTTP 200 — on both localhost and `www.bloomsbybethchs.com`.
+
+Note invalid input now returns **200**, not 500. Any alerting on 5xx from `/contact` will no longer see validation failures.
+
+#### FM-6 ⬜ Error messages are not associated with their inputs
+Now that FM-5 makes the messages actually render, the accessibility gap matters. Each error is a plain `<p>` adjacent to its input, with no `aria-describedby` linking the two and no `aria-invalid` on the control — so a screen reader announces the field without its error. Nothing announces that the submission failed at all: the summary line is not a live region and focus stays on the submit button.
+
+Fix: `aria-invalid={!!getFieldError('x')}` plus `aria-describedby` pointing at an `id` on each message, and `role="alert"` (or `aria-live="polite"`) on the summary. Optionally move focus to the first invalid field. Thirteen fields, mechanical but repetitive.
+
 ---
 
 ### 🟢 Cleanup
@@ -264,7 +293,9 @@ Philosophy cards (About) and `ServiceCard` are visually near-identical but separ
 | 6b | **T-1, T-2, T-3** type refinement | **next up** |
 | 7 | **C-1, C-2** | Housekeeping |
 
-Still open on the form: **FM-4** (error red clashes with the palette).
+Still open on the form: **FM-4** (error red clashes with the palette) and **FM-6** (errors not
+associated with their inputs). Both became more visible once **FM-5** made the error messages
+render for the first time; doing them together is one pass over the same 13 fields.
 
 ---
 
@@ -272,3 +303,6 @@ Still open on the form: **FM-4** (error red clashes with the palette).
 
 - **`public/hero-garden.jpg` is 18 MB.** It is the largest asset on the site by a wide margin and loads on the home page. Compressing it would materially improve load time and Core Web Vitals. Worth its own ticket.
 - **Pre-existing lint errors.** `npm run lint` reports numerous `react/no-unescaped-entities` errors plus one unused variable in `newsletter-signup.tsx`. ESLint is disabled during build (`next.config.ts`), so these do not block deploys. Unrelated to design.
+- **Notification emails fail silently.** `lib/email.ts` awaits its `fetch` to Resend and never checks the response, so a revoked key, unverified sending domain or rate limit is discarded without logging. The inquiry still reaches Neon, but nobody is told. The key in the local `.env.local` returns 401 from the Resend API as of 2026-07-29 — worth confirming notifications are actually arriving in production, which holds a separate key. Own ticket.
+- **`lib/db.ts` hides a missing `DATABASE_URL` behind a non-null assertion.** `neon(process.env.DATABASE_URL!)` runs at module scope and `neon()` throws at *construction*, upstream of any `try`/`catch` in the action — so the variable being absent is an uncatchable 500 on every submission, and the `!` is the only thing suppressing the warning. This is exactly how the (now deleted) duplicate Vercel projects failed. Consider a lazy accessor that throws a named error at query time.
+- **Duplicate Vercel projects, resolved 2026-07-29.** Four projects were connected to this one GitHub repo, so every push deployed public copies of the site at `.vercel.app` URLs — one 500ing on all submissions, one apparently capturing real leads. All but `blooms-1hgv` (which holds the domain) were deleted. Recorded in CLAUDE.md, since the naming makes it easy to re-create.

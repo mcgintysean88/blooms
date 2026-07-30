@@ -12,8 +12,14 @@ npm run db:setup # Initialize database tables (Neon)
 ```
 
 `.claude/launch.json` starts the same dev server on **port 3100** for preview tooling, to
-avoid colliding with anything already on 3000. Don't run `npm run build` while a dev server
-is live — it overwrites `.next` and the dev server then throws `ENOENT` on its manifests.
+avoid colliding with anything already on 3000.
+
+**Don't mix `npm run build` and `npm run dev` against the same `.next`** — in either order.
+`next build` writes `.next/server/app/<route>/page.js` as a *file*; Turbopack dev expects
+`page/` as a *directory* holding `app-build-manifest.json`. The two layouts collide, the dev
+server throws `ENOENT` on its manifests, and **server actions stop dispatching — every POST
+returns a 500 before your action body runs**. The tell is a 500 with none of your own
+`console.error` output in the server log. Fix with `rm -rf .next`.
 
 ## Tech Stack
 
@@ -65,7 +71,7 @@ lib/
   utils.ts            # cn() — Tailwind class merging (clsx + tailwind-merge)
 
 types/
-  index.ts            # Shared TypeScript types (ContactFormData, ServiceItem, etc.)
+  index.ts            # ContactFormData, ContactFormResult (the action's contract), ServiceItem
 
 scripts/
   create-tables.mjs   # One-time DB schema setup script
@@ -81,6 +87,34 @@ scripts/
 
 Newsletter signup follows the same pattern but writes to `subscribers` table (no email sent).
 
+### The action returns its errors — it never throws
+
+`submitContactForm` returns `ContactFormResult` (`types/index.ts`), a discriminated union:
+`{ success: true }`, or `{ success: false, error, fieldErrors? }`. `fieldErrors` is Zod's
+`flatten().fieldErrors`, keyed off `ContactFormData` so error keys cannot drift from field
+names. `ContactForm` feeds it into `validationErrors`, and each of the 13 fields renders its
+own message plus a `border-red-500` ring via `getFieldError`.
+
+**Do not go back to throwing here.** A throw inside a server action reaches the browser as an
+HTTP 500 and an opaque "An unexpected response was received from the server" — the field
+detail never crosses the boundary. That shipped: a message under 10 characters returned a 500
+on the live site, and the per-field rendering above was unreachable dead code, because the
+errors were logged server-side and discarded. Invalid input now returns **200**, so any
+alerting on 5xx from `/contact` will not see validation failures.
+
+One failure mode this does *not* cover: `lib/db.ts` calls `neon(process.env.DATABASE_URL!)` at
+module scope, and `neon()` throws at *construction* when the string is missing. That throw is
+upstream of the action's `try`/`catch`, so a missing `DATABASE_URL` is still an uncatchable
+500. The `!` is the only thing hiding it at compile time.
+
+### Email failures are silent
+
+`lib/email.ts` does `await fetch(...)` to Resend and never inspects the response. Any
+rejection — revoked key, unverified sending domain, rate limit — is discarded: the lead is
+still saved to Neon, but no notification goes out and nothing is logged. If notifications are
+reported missing, suspect this before suspecting the form. Sending is from
+`noreply@bloomsbybethchs.com`, which requires that domain to be verified in Resend.
+
 ## Environment Variables
 
 Required in `.env.local` (see `.env.example`):
@@ -89,7 +123,15 @@ Required in `.env.local` (see `.env.example`):
 |----------|---------|
 | `DATABASE_URL` | Neon PostgreSQL connection string |
 | `RESEND_API_KEY` | Resend email API key |
-| `NOTIFICATION_EMAIL` | Beth's email — receives form submission alerts |
+| `NOTIFICATION_EMAIL` | Recipient of form submission alerts — currently `sean@bloomsbybethchs.com`, not Beth's own address |
+
+**There is one Neon database, shared by local development and production.** There is no
+separate dev branch or seed database, so a form submission from `localhost` writes a real row
+to `contact_messages` alongside genuine customer inquiries — which is the concrete reason for
+the "don't submit a test lead" rule under Conventions. Verify structurally instead.
+
+The same three variables must also be set on the production Vercel project (see below); they
+are not inferred from `.env.local`.
 
 ## Database Schema
 
@@ -155,6 +197,9 @@ back to system defaults. That exact bug shipped undetected for months; see
 - **Server components by default.** Add `"use client"` only for interactive forms (ContactForm, NewsletterSignup) and the Header nav.
 - **`cn()` from `@/lib/utils`** for all conditional Tailwind class merging.
 - **Server actions** handle all form submissions — no API route handlers.
+- **Server actions return structured results; they never throw.** A throw becomes a 500 plus
+  an opaque client-side error, and any detail you computed is lost. Return
+  `{ success: false, ... }` instead. See Data Flow.
 - **Zod schemas** live in `app/actions.ts` alongside the actions that use them.
 - **shadcn/ui** components go in `components/ui/`; custom components go in `components/`.
 - **Path alias:** `@/` maps to the project root.

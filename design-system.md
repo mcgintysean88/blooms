@@ -210,7 +210,17 @@ placeholder option is muted via `invalid:text-muted-foreground`.
 </Select>
 ```
 
-**Error state (current gap):** Uses generic `red-500` — not brand-aligned.  
+**Error state (current gap):** Uses generic `red-500` — not brand-aligned. See FM-4.
+
+Errors are driven by the `fieldErrors` on `ContactFormResult`, returned by `submitContactForm`
+and read through `getFieldError(name)`. Until 2026-07-29 this anatomy was **dead code** — the
+server action threw instead of returning field detail, so the state backing it was never
+populated and no message could render. Documented here as working while it was not; if you
+change the action's return shape, this pattern goes dark again silently. See FM-5.
+
+Still missing: `aria-invalid` on the control and `aria-describedby` linking it to the message,
+so the error is invisible to screen readers (FM-6).
+
 **Focus state:** `focus-visible:ring-ring`, where `--ring` is sage `#738c65`. Resolved 2026-07-29.
 
 ---
